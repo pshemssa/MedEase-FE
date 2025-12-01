@@ -23,7 +23,7 @@ function SettingsPage() {
                 <input
                   type="text"
                   defaultValue="Dr. John Smith"
-                  className="w-full bg-purple-50 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg"
+                  className="w-full bg-purple-50 text-gray-300 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg"
                 />
               </div>
               <div>
@@ -31,7 +31,7 @@ function SettingsPage() {
                 <input
                   type="email"
                   defaultValue="john.smith@hospital.com"
-                  className="w-full px-4 py-2 bg-purple-50 bg-gray-50 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 text-gray-300 bg-purple-50 bg-gray-50 border border-gray-300 rounded-lg"
                 />
               </div>
             </div>
@@ -42,7 +42,7 @@ function SettingsPage() {
                 <input
                   type="tel"
                   defaultValue="+1 (555) 123-4567"
-                  className="w-full px-4 py-2 bg-purple-50 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
                 />
               </div>
               <div>
@@ -50,7 +50,7 @@ function SettingsPage() {
                 <input
                   type="text"
                   defaultValue="MD-12345678"
-                  className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
                 />
               </div>
             </div>
@@ -60,14 +60,14 @@ function SettingsPage() {
               <input
                 type="text"
                 defaultValue="Internal Medicine"
-                className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Professional Bio</label>
               <textarea
-                className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg resize-none"
+                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg resize-none"
                 rows={3}
               />
             </div>
@@ -89,7 +89,7 @@ function SettingsPage() {
               <input
                 type="text"
                 defaultValue="City Medical Center"
-                className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
               />
             </div>
 
@@ -98,7 +98,7 @@ function SettingsPage() {
               <input
                 type="text"
                 defaultValue="123 Healthcare Ave, Medical District, NY 10001"
-                className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 bg-purple-50  text-gray-300 border border-gray-300 rounded-lg"
               />
             </div>
 
@@ -108,7 +108,7 @@ function SettingsPage() {
                 <input
                   type="tel"
                   defaultValue="+1 (555) 987-6543"
-                  className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 bg-purple-50  text-gray-300 border border-gray-300 rounded-lg"
                 />
               </div>
               <div>
@@ -116,7 +116,7 @@ function SettingsPage() {
                 <input
                   type="email"
                   defaultValue="info@citymedical.com"
-                  className="w-full px-4 py-2 bg-purple-50  border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
                 />
               </div>
             </div>

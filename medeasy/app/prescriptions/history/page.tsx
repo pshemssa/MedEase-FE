@@ -35,16 +35,16 @@ function PrescriptionHistory() {
             <input
               type="text"
               placeholder="Search by patient name, prescription ID..."
-              className="w-full bg-purple-50 pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-purple-50 text-black pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select className="px-4 py-3 bg-purple-50  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select className="px-4 py-3 bg-purple-50 text-gray-600 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>All Statuses</option>
             <option>Active</option>
             <option>Pending</option>
             <option>Completed</option>
           </select>
-          <select className="px-4 py-3 bg-purple-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select className="px-4 py-3 bg-purple-50 text-gray-600 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>All Dates</option>
             <option>Today</option>
             <option>This Week</option>
@@ -72,13 +72,13 @@ function PrescriptionHistory() {
             <tbody>
               {prescriptions.map((prescription) => (
                 <tr key={prescription.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-4 px-4 text-blue-600">{prescription.id}</td>
+                  <td className="py-4 px-4 text-blue-500">{prescription.id}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.patient}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.date}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.diagnosis}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.medicines} medicines</td>
                   <td className="py-4 px-4">
-                    <button className="text-blue-600 hover:text-blue-700">View</button>
+                    <button className="text-blue-600 hover:text-blue-600">View</button>
                   </td>
                 </tr>
               ))}

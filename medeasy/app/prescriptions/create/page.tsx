@@ -21,7 +21,7 @@ function CreatePrescription() {
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="Enter Patient ID (e.g., PAT-001)"
-              className="flex-1 px-4 py-3 bg-purple-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-3 text-black bg-purple-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
               <Search className="w-5 h-5" />
@@ -35,7 +35,7 @@ function CreatePrescription() {
             value={diagnosis}
             onChange={(e) => setDiagnosis(e.target.value)}
             placeholder="Enter diagnosis, symptoms, and additional notes..."
-            className="w-full h-32 px-4 py-3 bg-purple-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full h-32 px-4 py-3 text-black bg-purple-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
           />
         </div>
       </div>

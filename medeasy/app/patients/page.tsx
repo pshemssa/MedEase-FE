@@ -27,7 +27,7 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
             <input
               type="text"
               placeholder="Search by name or patient ID..."
-              className="w-full bg-purple-50 pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-purple-50 text-black pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
