@@ -73,7 +73,7 @@ function PrescriptionHistory() {
               {prescriptions.map((prescription) => (
                 <tr key={prescription.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="py-4 px-4 text-blue-500">{prescription.id}</td>
-                  <td className="py-4 px-4 text-gray-700">{prescription.patient}</td>
+                  <td className="py-4 px-4 text-gray-700">{prescription.patientId}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.date}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.diagnosis}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.medicines} medicines</td>

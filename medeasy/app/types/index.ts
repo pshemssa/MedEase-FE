@@ -4,7 +4,7 @@ export interface Patient {
   name: string;
   gender: string;
   phone: string;
-  email: string; // Add this
+  email: string; 
   lastVisit: string;
   prescriptions: number;
 }

@@ -24,8 +24,8 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
           onClick={() => setCurrentPage('create-prescription')}
           className="px-4 py-2 bg-blue-500 text-sm text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
         >
-          <Plus className="w-5 h-5" />
-          Create Prescription
+          <Plus className="w-3 h-3 border border-white rounded-full" />
+          Add New Patient
         </button>
       </div>
 
@@ -52,14 +52,14 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
         })}
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className=" max-w-md mx-2 text-md bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h2 className="text-xl text-gray-900 mb-2">Quick Actions</h2>
         <p className="text-gray-600 mb-6">Frequently used features</p>
         
         <div className="space-y-4">
           <button 
             onClick={() => setCurrentPage('create-prescription')}
-            className="w-full p-4 bg-purple-50 hover:bg-purple-100 rounded-lg flex items-center gap-4 transition-colors"
+            className="w-full p-2 bg-purple-50 hover:bg-white rounded-lg flex items-center gap-4 transition-colors"
           >
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
               <Plus className="w-5 h-5 text-blue-600" />
@@ -72,7 +72,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
           
           <button 
             onClick={() => setCurrentPage('patient-records')}
-            className="w-full p-4 bg-purple-50 hover:bg-purple-100 rounded-lg flex items-center gap-4 transition-colors"
+            className="w-full p-2 bg-purple-50 hover:bg-white rounded-lg flex items-center gap-4 transition-colors"
           >
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
               <Users className="w-5 h-5 text-blue-600" />
@@ -85,7 +85,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
 
            <button 
             onClick={() => setCurrentPage('patient-records')}
-            className="w-full p-4 bg-purple-50 hover:bg-purple-100 rounded-lg flex items-center gap-4 transition-colors"
+            className="w-full p-2 bg-purple-50 hover:bg-white rounded-lg flex items-center gap-4 transition-colors"
           >
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
               <FileText className="w-5 h-5 text-blue-600" />
@@ -95,6 +95,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
               <p className="text-sm text-gray-400">Review past prescriptions</p>
             </div>
           </button>
+          <br/>
         </div>
       </div>
     </div>

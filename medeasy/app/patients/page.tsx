@@ -8,12 +8,14 @@ interface PatientRecordsProps {
 
 export default function PatientRecords({ selectedPatient, setSelectedPatient }: PatientRecordsProps) {
   const patients: Patient[] = [
-    { id: 'PAT-001', name: 'John Doe', gender: 'Male', phone: '+1 (555) 123-4567', lastVisit: '1/15/2024', prescriptions: 12 },
-    { id: 'PAT-002', name: 'Sarah Wilson', gender: 'Female', phone: '+1 (555) 234-5678', lastVisit: '1/18/2024', prescriptions: 5 },
+    { id: 'PAT-001', name: 'John Doe', gender: 'Male', phone: '+1 (555) 123-4567', email: 'j.done@gmail.com', lastVisit: '1/15/2024', prescriptions: 12 },
+    { id: 'PAT-002', name: 'Sarah Wilson', gender: 'Female', phone: '+1 (555) 234-5678',email:'s.wilson@gmail.com', lastVisit: '1/18/2024', prescriptions: 5 },
   ];
 
   return (
     <div>
+        <aside>
+            <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Patient Records</h1>
       <p className="text-gray-600 mb-8">Search and manage patient medical records</p>
 
@@ -64,13 +66,16 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
           </table>
         </div>
       </div>
-
+    </div>
+    <div>
       {!selectedPatient && (
         <div className="mt-8 text-center py-12">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500">Select a patient to view their details</p>
         </div>
       )}
+      </div>
+      </aside>
     </div>
   );
 }

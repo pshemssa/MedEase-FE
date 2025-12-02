@@ -1,6 +1,8 @@
-import { FileText, Users } from "lucide-react";
+import { FileText, Key, Lock, Save, Shield, Users } from "lucide-react";
+import { useState } from "react";
 
 function SettingsPage() {
+    const [is2FAEnabled, setIs2FAEnabled] = useState(true);
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
@@ -119,19 +121,87 @@ function SettingsPage() {
                   className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
                 />
               </div>
+             
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-6 flex justify-end gap-4">
-        <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
-          Cancel
-        </button>
-        <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+             <div>
+              
+              <label className="block text-sm font-medium text-gray-700 mb-2">Faculty Licence</label>
+              <input
+                type="text"
+                defaultValue="Licence"
+                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+              />
+            </div>
+          </div> 
+          <button className="px-6 py-1 bg-blue-300 text-white rounded-lg hover:bg-blue-600">
           Save Changes
         </button>
+        </div>
+        
       </div>
+<br/>
+<div>
+   
+    <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-xl">
+      <h2 className="text-2xl font-bold flex items-center gap-3 mb-2">
+        <Shield className="w-8 h-8 text-black" />
+       <span className="text-gray-600">Security & Privacy</span> 
+      </h2>
+      <p className="text-gray-600 mb-8">Manage your account security</p>
+
+      {/* 2FA */}
+      <div className="flex items-center justify-between py-6 border-b">
+        <div>
+          <p className="font-medium flex items-center gap-2">
+            <Key className="w-5 h-5 text-blue-500" /> <span className="text-gray-600 text-sm">Two-Factor Authentication</span> 
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            Add an extra layer of security to your account
+          </p>
+        </div>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={is2FAEnabled}
+            onChange={(e) => setIs2FAEnabled(e.target.checked)}
+          />
+          <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+        </label>
+      </div>
+
+      {/* Password Change */}
+      <div className="py-8">
+        <h3 className=" text-sm text-gray-500 mb-6 flex items-center gap-2">
+           Change Password
+        </h3>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <input
+            type="password"
+            placeholder="Current Password"
+            className="px-4 py-3 text-gray-600 rounded-lg bg-purple-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="password"
+            placeholder="New Password"
+            className="px-4 py-3 text-gray-600 rounded-lg bg-purple-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <button className="px-6 py-2 border text-sm flex flex-row gap-4 text-gray-800 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+          <Key className="w-5 h-5 text-black " /> Update Password
+        </button>
+      </div>
+
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <button className="bg-blue-300 w-full h-12 text-white px-70 py-4 rounded-xl flex items-center gap-3 hover:bg-blue-400 transition text-lg font-medium">
+          <Save className="w-5 h-5" />
+          Save Security Settings
+        </button>
+      </div>
+    </div></div>
     </div>
   );
 }

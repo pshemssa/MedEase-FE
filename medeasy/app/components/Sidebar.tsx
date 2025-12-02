@@ -20,9 +20,11 @@ export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
     <div className="w-64 bg-gray-900 text-white p-6">
       <div className="mb-8">
         <h2 className="text-sm text-gray-400 mb-4">Doctor Portal</h2>
-        <h1 className="text-lg font-semibold">Medical Dashboard</h1>
+        <hr className="text-gray-600 w-full"/>
+        <br/>
+        
       </div>
-      
+      <h1 className="text-sm text-gray-600">Medical Dashboard</h1>
       <nav className="space-y-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
