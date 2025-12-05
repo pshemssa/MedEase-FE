@@ -15,10 +15,10 @@ export interface Stat {
   title: string;
   value: string;
   subtitle: string;
-  icon: any;
+  icon: React.ElementType;
 }
 
-export type PageType = 'dashboard' | 'create-prescription' | 'patient-records' | 'prescription-history' | 'settings' | 'add-patient' ;
+export type PageType = 'dashboard' | 'create-prescription' | 'patient-records' | 'prescription-history' | 'settings' | 'add-patient' | 'profile' ;
 
 interface Medicine {
   id: string;

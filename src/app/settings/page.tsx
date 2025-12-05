@@ -1,58 +1,151 @@
-import { FileText, Key, Lock, Save, Shield, Users } from "lucide-react";
-import { useState } from "react";
+import { FileText, Key, Save, Shield, Users } from "lucide-react";
+import { useState, useEffect } from "react";
 
 function SettingsPage() {
-    const [is2FAEnabled, setIs2FAEnabled] = useState(true);
-  return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-      <p className="text-gray-600 mb-8">Manage your profile, clinic information and security settings</p>
+  const [is2FAEnabled, setIs2FAEnabled] = useState(true);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [profileData, setProfileData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    license: '',
+    specialization: '',
+    bio: ''
+  });
+  
+  const [clinicData, setClinicData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    email: '',
+    license: ''
+  });
 
-      <div className="grid grid-cols-2 gap-6">
+  const saveProfile = () => {
+    localStorage.setItem('doctorProfile', JSON.stringify(profileData));
+    alert('Profile saved successfully!');
+  };
+
+  const saveClinic = () => {
+    localStorage.setItem('clinicInfo', JSON.stringify(clinicData));
+    alert('Clinic information saved successfully!');
+  };
+
+  const updatePassword = () => {
+    if (!currentPassword || !newPassword) {
+      alert('Please fill in both current and new password.');
+      return;
+    }
+    
+    const savedPassword = localStorage.getItem('userPassword');
+    if (savedPassword && savedPassword !== currentPassword) {
+      alert('Current password is incorrect.');
+      return;
+    }
+    
+    localStorage.setItem('userPassword', newPassword);
+    localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
+    alert('Password updated successfully!');
+    setCurrentPassword('');
+    setNewPassword('');
+  };
+
+  const saveSecurity = () => {
+    localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
+    alert('Security settings saved successfully!');
+  };
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('doctorProfile');
+    const savedClinic = localStorage.getItem('clinicInfo');
+    const savedSecurity = localStorage.getItem('securitySettings');
+    
+    if (savedProfile) {
+      setProfileData(JSON.parse(savedProfile));
+    } else {
+      setProfileData({
+        fullName: 'Dr. John Smith',
+        email: 'john.smith@hospital.com',
+        phone: '+1 (555) 123-4567',
+        license: 'MD-12345678',
+        specialization: 'Internal Medicine',
+        bio: ''
+      });
+    }
+    
+    if (savedClinic) {
+      setClinicData(JSON.parse(savedClinic));
+    } else {
+      setClinicData({
+        name: 'City Medical Center',
+        address: '123 Healthcare Ave, Medical District, NY 10001',
+        phone: '+1 (555) 987-6543',
+        email: 'info@citymedical.com',
+        license: 'CL-98765432'
+      });
+    }
+    
+    if (savedSecurity) setIs2FAEnabled(JSON.parse(savedSecurity).is2FAEnabled);
+  }, []);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
+        <p className="text-gray-600">Manage your profile, clinic information and security settings</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Profile Information */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center gap-3 mb-6">
-            <Users className="w-6 h-6 text-gray-600" />
+            <Users className="w-6 h-6 text-blue-600" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Profile Information</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
               <p className="text-sm text-gray-600">Update your personal and professional information</p>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                 <input
                   type="text"
-                  defaultValue="Dr. John Smith"
-                  className="w-full bg-purple-50 text-gray-300 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg"
+                  value={profileData.fullName}
+                  onChange={(e) => setProfileData({...profileData, fullName: e.target.value})}
+                  className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                 <input
                   type="email"
-                  defaultValue="john.smith@hospital.com"
-                  className="w-full px-4 py-2 text-gray-300 bg-purple-50 bg-gray-50 border border-gray-300 rounded-lg"
+                  value={profileData.email}
+                  onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                  className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                 <input
                   type="tel"
-                  defaultValue="+1 (555) 123-4567"
-                  className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+                  value={profileData.phone}
+                  onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                  className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Medical License</label>
                 <input
                   type="text"
-                  defaultValue="MD-12345678"
-                  className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+                  value={profileData.license}
+                  onChange={(e) => setProfileData({...profileData, license: e.target.value})}
+                  className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             </div>
@@ -61,29 +154,40 @@ function SettingsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
               <input
                 type="text"
-                placeholder="eg:Internal Medicine"
-                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+                value={profileData.specialization}
+                onChange={(e) => setProfileData({...profileData, specialization: e.target.value})}
+                placeholder="e.g., Internal Medicine"
+                className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Professional Bio</label>
               <textarea
-                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg resize-none"
+                value={profileData.bio}
+                onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
+                placeholder="Brief description of your professional background"
+                className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 rows={3}
               />
             </div>
-             <button className="px-6 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-500 flex items-center gap-2">
-              <FileText className="w-5 h-5 ml-15"/>Save the Profile Changes
-        </button>
+            
+            <button 
+              onClick={saveProfile}
+              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors"
+            >
+              <Save className="w-5 h-5" />
+              Save Profile Changes
+            </button>
           </div>
         </div>
         
+        {/* Clinic Information */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center gap-3 mb-6">
-            <FileText className="w-6 h-6 text-gray-600" />
+            <FileText className="w-6 h-6 text-blue-600" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Clinic Information</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Clinic Information</h2>
               <p className="text-sm text-gray-600">Manage your clinic or hospital details</p>
             </div>
           </div>
@@ -93,8 +197,9 @@ function SettingsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Clinic/Hospital Name</label>
               <input
                 type="text"
-                defaultValue="City Medical Center"
-                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+                value={clinicData.name}
+                onChange={(e) => setClinicData({...clinicData, name: e.target.value})}
+                className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -102,110 +207,114 @@ function SettingsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
               <input
                 type="text"
-                defaultValue="123 Healthcare Ave, Medical District, NY 10001"
-                className="w-full px-4 py-2 bg-purple-50  text-gray-300 border border-gray-300 rounded-lg"
+                value={clinicData.address}
+                onChange={(e) => setClinicData({...clinicData, address: e.target.value})}
+                className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                 <input
                   type="tel"
-                  defaultValue="+1 (555) 987-6543"
-                  className="w-full px-4 py-2 bg-purple-50  text-gray-300 border border-gray-300 rounded-lg"
+                  value={clinicData.phone}
+                  onChange={(e) => setClinicData({...clinicData, phone: e.target.value})}
+                  className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                 <input
                   type="email"
-                  defaultValue="info@citymedical.com"
-                  className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+                  value={clinicData.email}
+                  onChange={(e) => setClinicData({...clinicData, email: e.target.value})}
+                  className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-             
             </div>
-             <div>
-              
-              <label className="block text-sm font-medium text-gray-700 mb-2">Faculty Licence</label>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Facility License</label>
               <input
                 type="text"
-                defaultValue="Licence"
-                className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
+                value={clinicData.license}
+                onChange={(e) => setClinicData({...clinicData, license: e.target.value})}
+                className="w-full px-4 py-2 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-          </div> 
-          <br/>
-          <button className="px-6 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-500 flex items-center gap-2">
-              <FileText className="w-5 h-5 ml-15"/>Save the Clinic Info Changes
-        </button>
+            
+            <button 
+              onClick={saveClinic}
+              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors"
+            >
+              <Save className="w-5 h-5" />
+              Save Clinic Changes
+            </button>
+          </div>
         </div>
-        
-      </div>
-<br/>
-<div>
-   
-    <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-xl">
-      <h2 className="text-2xl font-bold flex items-center gap-3 mb-2">
-        <Shield className="w-8 h-8 text-black" />
-       <span className="text-gray-600">Security & Privacy</span> 
-      </h2>
-      <p className="text-gray-600 mb-8">Manage your account security</p>
-
-      {/* 2FA */}
-      <div className="flex items-center justify-between py-6 border-b">
-        <div>
-          <p className="font-medium flex items-center gap-2">
-            <Key className="w-5 h-5 text-blue-500" /> <span className="text-gray-600 text-sm">Two-Factor Authentication</span> 
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            Add an extra layer of security to your account
-          </p>
-        </div>
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            className="sr-only peer"
-            checked={is2FAEnabled}
-            onChange={(e) => setIs2FAEnabled(e.target.checked)}
-          />
-          <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-        </label>
       </div>
 
-      {/* Password Change */}
-      <div className="py-8">
-        <h3 className=" text-sm text-gray-500 mb-6 flex items-center gap-2">
-           Change Password
-        </h3>
-
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <input
-            type="password"
-            placeholder="Current Password"
-            className="px-4 py-3 text-gray-600 rounded-lg bg-purple-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            className="px-4 py-3 text-gray-600 rounded-lg bg-purple-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+      {/* Security Section */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="flex items-center gap-3 mb-6">
+          <Shield className="w-6 h-6 text-blue-600" />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">Security & Privacy</h2>
+            <p className="text-sm text-gray-600">Manage your account security settings</p>
+          </div>
         </div>
 
-        <button className="px-6 py-2 border text-sm flex flex-row gap-4 text-gray-800 border-gray-300 rounded-lg hover:bg-gray-50 transition">
-          <Key className="w-5 h-5 text-black " /> Update Password
-        </button>
-      </div>
+        {/* 2FA Toggle */}
+        <div className="flex items-center justify-between py-6 border-b border-gray-200">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Key className="w-5 h-5 text-blue-600" />
+              <span className="font-medium text-gray-900">Two-Factor Authentication</span>
+            </div>
+            <p className="text-sm text-gray-600">
+              Add an extra layer of security to your account
+            </p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={is2FAEnabled}
+              onChange={(e) => setIs2FAEnabled(e.target.checked)}
+            />
+            <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+          </label>
+        </div>
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <button className="bg-blue-500 w-full h-12 text-white px-70 py-4 rounded-xl flex items-center gap-3 hover:bg-blue-400 transition text-lg font-medium">
-          <Save className="w-5 h-5" />
-          Save Security Settings
-        </button>
+        {/* Password Change */}
+        <div className="py-6">
+          <h3 className="font-medium text-gray-900 mb-4">Change Password</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Current Password"
+              className="px-4 py-3 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New Password"
+              className="px-4 py-3 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <button 
+            onClick={updatePassword}
+            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 transition-colors"
+          >
+            <Key className="w-5 h-5" />
+            Update Password
+          </button>
+        </div>
       </div>
-    </div></div>
     </div>
   );
 }
