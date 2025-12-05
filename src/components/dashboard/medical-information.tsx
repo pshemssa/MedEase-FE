@@ -60,9 +60,9 @@ export default function MedicalInformation({
           <h3 className=" text-gray-800 text-sm">Chronic Diseases</h3>
         </div>
         <div className="space-y-3">
-          {chronicDiseases.map((disease, idx) => (
+          {chronicDiseases.map((disease) => (
             <div
-              key={idx}
+              key={`${disease.name}-${disease.severity}`}
               className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200"
             >
               <div>
@@ -86,8 +86,8 @@ export default function MedicalInformation({
           <h3 className="font-semibold text-gray-800 text-sm">Allergies & Reactions</h3>
         </div>
         <div className="space-y-3">
-          {allergies.map((allergy, idx) => (
-            <div key={idx} className="flex items-center justify-between bg-red-50 p-4 rounded-lg border border-red-200">
+          {allergies.map((allergy) => (
+            <div key={`${allergy.type}-${allergy.name}`} className="flex items-center justify-between bg-red-50 p-4 rounded-lg border border-red-200">
               <div className="flex items-center gap-3 flex-1">
                 <span
                   className={`font-semibold text-xs px-3 py-1 rounded-full text-white whitespace-nowrap ${

@@ -1,38 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
+  
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { message: 'Authentication service not configured for production' },
+      { status: 503 }
+    );
+  }
+
   try {
     const { email, password } = await request.json();
 
 
-    if (email === 'patient@medease.rw' && password === 'password123') {
-      return NextResponse.json({
-        message: 'Login successful',
-        token: 'mock-jwt-token-' + Date.now(),
-        user: {
-          id: 1,
-          email: email,
-          name: 'Raissa Micheline IMPUHWE MANZI',
-          role: 'patient'
-        }
-      });
-    }
+    const demoAccounts = [
+      { email: 'demo@medease.rw', password: 'demo123', name: '<demo_patient>' },
+      { email: 'patient@medease.rw', password: 'patient123', name: '<test_patient>' }
+    ];
 
-    if (email && password) {
+    const account = demoAccounts.find(acc => acc.email === email && acc.password === password);
+    
+    if (account) {
       return NextResponse.json({
-        message: 'Login successful',
-        token: 'mock-jwt-token-' + Date.now(),
+        message: 'Login successful (DEMO MODE)',
+        token: 'dev-token-' + Date.now(),
         user: {
           id: 1,
-          email: email,
-          name: 'Demo Patient',
+          email: account.email,
+          name: account.name,
           role: 'patient'
         }
       });
     }
 
     return NextResponse.json(
-      { message: 'Invalid email or password' },
+      { message: 'Invalid credentials. Demo: demo@medease.rw / demo123' },
       { status: 401 }
     );
 
@@ -43,3 +45,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

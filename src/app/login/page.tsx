@@ -37,15 +37,17 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+      
       if (!response.ok) {
-        throw new Error("Invalid credentials");
+        setErrors({ general: data.message || "Login failed. Please try again." });
+        return;
       }
 
-      const data = await response.json();
       localStorage.setItem("authToken", data.token);
       router.push("/dashboard");
     } catch (error) {
-      setErrors({ general: "Invalid email or password. Please try again." });
+      setErrors({ general: "Network error. Please try again." });
     } finally {
       setIsLoading(false);
     }
@@ -186,7 +188,7 @@ export default function Login() {
                   ) : (
                     "Sign In"
                   )}
-``                </button>
+                </button>
               </div>
             </form>
 
