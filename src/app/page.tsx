@@ -5,7 +5,7 @@ import type { PageType, Patient } from './types';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import CreatePrescription from './prescriptions/create/page';
-import Dashboard from './dashboard/page';
+import Dashboard from './doctorDashboard/page';
 import PatientRecords from './patients/page';
 import PrescriptionHistory from './prescriptions/history/page';
 import SettingsPage from './settings/page';
