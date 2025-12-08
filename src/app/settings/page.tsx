@@ -1,3 +1,4 @@
+"use client";
 import { FileText, Key, Save, Shield, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 

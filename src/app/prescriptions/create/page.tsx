@@ -1,3 +1,4 @@
+"use client";
 import { FileText, Plus, Search, Send, X, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 

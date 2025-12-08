@@ -1,3 +1,5 @@
+
+"use client";
 import { Prescription } from "../../types/index";
 import { Download, Filter, Search } from "lucide-react";
 import { useState, useEffect } from "react";

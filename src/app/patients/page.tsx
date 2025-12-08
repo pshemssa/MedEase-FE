@@ -1,3 +1,4 @@
+"use client";
 import { Search, Users, Pill } from "lucide-react";
 import { Patient } from "../types";
 import { useState, useEffect } from "react";

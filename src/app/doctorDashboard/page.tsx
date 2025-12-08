@@ -1,3 +1,4 @@
+"use client";
 import { AlertCircle, Clock, FileText, Plus, Users, TrendingUp } from "lucide-react";
 import { PageType, Stat } from "../types";
 
@@ -5,7 +6,7 @@ interface DashboardProps {
   setCurrentPage: (page: PageType) => void;
 }
 
-export default function Dashboard({ setCurrentPage }: DashboardProps) {
+export default function Doctordashboard({ setCurrentPage }: DashboardProps) {
   const stats: Stat[] = [
     { title: "Today's Prescriptions", value: '24', subtitle: '+3 from yesterday', icon: FileText },
     { title: 'Pending Prescriptions', value: '8', subtitle: 'Awaiting dispensing', icon: Clock },
