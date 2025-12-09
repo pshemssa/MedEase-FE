@@ -2,6 +2,7 @@ import DashboardHeader from "@/components/dashboard/dashboard-header"
 import ProfileOverview from "@/components/dashboard/profile-overview"
 import MedicalHistory from "@/components/dashboard/medical-history"
 import MedicalInformation from "@/components/dashboard/medical-information"
+import MyPrescriptions from "@/components/dashboard/my-prescriptions"
 import JoinQueue from "@/components/dashboard/join-queue"
 
 export default function Dashboard() {
@@ -21,6 +22,7 @@ export default function Dashboard() {
               phone="<phone_number>"
             />
             <MedicalInformation />
+            <MyPrescriptions />
           </div>
           
           <div className="lg:col-span-1 space-y-6">

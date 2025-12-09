@@ -4,32 +4,54 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { ArrowLeft, Mail, Lock } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
 export default function RequestMedicalRecords() {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [verificationCode, setVerificationCode] = useState("")
+  const [generatedCode, setGeneratedCode] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const generateCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString()
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    setSubmitted(true)
-    setIsLoading(false)
+    try {
+      const code = generateCode()
+      setGeneratedCode(code)
+      console.log('DEMO MODE - Verification Code:', code)
+      
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      setSubmitted(true)
+    } catch (err: any) {
+      setError("Failed to generate verification code.")
+      console.error("Error:", err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleVerification = async () => {
     setIsLoading(true)
+    setError("")
     
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    
-    alert("Verification successful! Access granted to medical records.")
-    setIsLoading(false)
+    if (verificationCode === generatedCode) {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      router.push("/report-ready")
+    } else {
+      setError("Invalid verification code. Please try again.")
+      setIsLoading(false)
+    }
   }
 
   if (submitted) {
@@ -48,9 +70,19 @@ export default function RequestMedicalRecords() {
               </p>
             </div>
 
-            <p className="text-sm text-gray-600 bg-blue-50 p-4 rounded-lg">
-              Check your email and enter the verification code to access your complete medical history.
-            </p>
+            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+              <p className="text-sm font-semibold text-yellow-800 mb-2">📧 Demo Mode</p>
+              <p className="text-sm text-yellow-700 mb-2">
+                No email sent. Use this code to verify:
+              </p>
+              <p className="text-center text-2xl font-bold text-yellow-900">{generatedCode}</p>
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            )}
 
             <div className="space-y-3 pt-4">
               <Input
@@ -100,9 +132,17 @@ export default function RequestMedicalRecords() {
             </div>
           </div>
 
-          <p className="text-gray-600 text-sm leading-relaxed">
-            Enter your email address to receive a verification code for accessing your complete medical history.
-          </p>
+          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+            <p className="text-sm text-blue-800">
+              Enter your email address to receive a verification code for accessing your complete medical history.
+            </p>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
