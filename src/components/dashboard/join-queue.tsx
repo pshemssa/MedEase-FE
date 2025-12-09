@@ -1,10 +1,12 @@
 "use client"
 import { Clock } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function JoinQueue() {
-  const handleJoinQueue = () => {
+  const router = useRouter()
   
-    console.log('Joining queue...')
+  const handleJoinQueue = () => {
+    router.push('/Queue')
   }
 
   return (
