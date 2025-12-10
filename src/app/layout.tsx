@@ -7,11 +7,9 @@ import "./globals.css"
 const geist = Geist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Patient Dashboard | Secure Digital Health Information",
-  description: "Empowering patients in Rwanda with secure, accessible healthcare technology",
-  keywords: "healthcare, Rwanda, patient dashboard, medical records, digital health",
-
-}
+  title: "MedEase - Medical Dashboard",
+  description: "Comprehensive medical practice management system for doctors and healthcare professionals",
+};
 
 export default function RootLayout({
   children,
