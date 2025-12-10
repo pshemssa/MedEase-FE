@@ -12,8 +12,15 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    const trimmedEmail = email?.trim();
-    const trimmedPassword = password?.trim();
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
     const demoAccounts = [
       { email: 'demo@medease.rw', password: 'demo123', name: '<demo_patient>' },

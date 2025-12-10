@@ -5,7 +5,7 @@ import { Download, FileText, ArrowLeft } from "lucide-react"
 
 export default function ReportReady() {
   const handleDownloadPDF = () => {
-    // Create sample medical record data
+   
     const recordData = `
 MEDICAL RECORD
 
@@ -71,7 +71,7 @@ Generated on: ${new Date().toLocaleString()}
             className="w-full bg-white border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-4 px-4 rounded-md font-semibold transition-all duration-300 flex items-center justify-center gap-2"
           >
             <Download className="w-5 h-5" />
-            Download PDF Report
+            Download Record (TXT)
           </button>
 
           <button 

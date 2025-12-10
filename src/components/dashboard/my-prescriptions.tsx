@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Pill, Calendar, User, Clock, CheckCircle, Bell } from "lucide-react"
 
 export interface Prescription {
@@ -38,7 +38,7 @@ const defaultPrescriptions: Prescription[] = [
 export default function MyPrescriptions({ prescriptions = defaultPrescriptions }: MyPrescriptionsProps = {}) {
   const [activeNotifications, setActiveNotifications] = useState<Array<{id: string, prescription: Prescription, expiresAt: number}>>([])
   const [timeRemaining, setTimeRemaining] = useState<{[key: string]: string}>({})
-  const [notifiedIds, setNotifiedIds] = useState<Set<string>>(new Set())
+  const notifiedIdsRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {
@@ -58,14 +58,14 @@ export default function MyPrescriptions({ prescriptions = defaultPrescriptions }
           
           newNotifications.push({ id: prescription.id, prescription, expiresAt })
           
-          if (!notifiedIds.has(prescription.id)) {
+          if (!notifiedIdsRef.current.has(prescription.id)) {
             if ("Notification" in window && Notification.permission === "granted") {
               new Notification("New Prescription", {
                 body: `Your doctor has prescribed ${prescription.medicineName} ${prescription.dosage}`,
                 icon: "/favicon.ico"
               })
             }
-            setNotifiedIds(prev => new Set(prev).add(prescription.id))
+            notifiedIdsRef.current.add(prescription.id)
           }
         }
       })
