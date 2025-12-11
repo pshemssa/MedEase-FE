@@ -2,7 +2,7 @@
 import { FileText, Plus, Search, Send, X, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
-function PatientFoundView({ patient }: { patient: any }) {
+function PatientFoundView({ patient }: { patient: any }, showSuccess?: (message: string) => void) {
   const [draftPrescriptions, setDraftPrescriptions] = useState<any[]>([]);
   
   useEffect(() => {
@@ -23,7 +23,7 @@ function PatientFoundView({ patient }: { patient: any }) {
       );
       localStorage.setItem('prescriptions', JSON.stringify(updatedPrescriptions));
       setDraftPrescriptions(prev => prev.filter(p => p.id !== prescriptionId));
-      alert('Prescription activated and sent to history!');
+      showSuccess?.('Prescription activated and sent to history!');
     }
   };
 
@@ -74,7 +74,13 @@ interface Medicine {
   instructions: string;
 }
 
-function CreatePrescription() {
+interface CreatePrescriptionProps {
+  showSuccess?: (message: string) => void;
+  showError?: (message: string) => void;
+  showInfo?: (message: string) => void;
+}
+
+function CreatePrescription({ showSuccess, showError, showInfo }: CreatePrescriptionProps) {
   const [patientId, setPatientId] = useState<string>('');
   const [diagnosis, setDiagnosis] = useState<string>('');
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -88,7 +94,7 @@ function CreatePrescription() {
   });
 
   const addMedicine = () => {
-    if (currentMedicine.name && currentMedicine.dosage) {
+    if (currentMedicine.name && currentMedicine.dosage && currentMedicine.frequency && currentMedicine.duration && currentMedicine.instructions) {
       const newMedicine: Medicine = {
         ...currentMedicine,
         id: Date.now().toString()
@@ -101,6 +107,7 @@ function CreatePrescription() {
         duration: '',
         instructions: ''
       });
+      showSuccess?.('Medicine added successfully!');
     }
   };
 
@@ -120,19 +127,24 @@ function CreatePrescription() {
         const patient = patients.find((p: any) => p.id === patientId);
         if (patient) {
           setFoundPatient(patient);
+          showSuccess?.(`Patient ${patient.name} found!`);
         } else {
           setFoundPatient(null);
+          showError?.('Patient not found. Please check the ID and try again.');
         }
       } catch (error) {
         console.error('Failed to parse patients data:', error);
         setFoundPatient(null);
+        showError?.('Error searching for patient.');
       }
+    } else {
+      showError?.('No patients found in the system.');
     }
   };
 
   const savePrescription = (isDraft: boolean = false) => {
-    if (!foundPatient || !diagnosis || medicines.length === 0) {
-      console.warn('Please search for a valid patient, add diagnosis, and at least one medicine.');
+    if (!foundPatient || !diagnosis.trim() || medicines.length === 0) {
+      showError?.('Please search for a valid patient, add diagnosis, and at least one medicine.');
       return;
     }
     
@@ -164,10 +176,11 @@ function CreatePrescription() {
       existingPrescriptions.push(prescriptionData);
       localStorage.setItem('prescriptions', JSON.stringify(existingPrescriptions));
       
-      console.log(`Prescription ${isDraft ? 'saved as draft' : 'created and sent'} with ID: ${prescriptionId}`);
+      showSuccess?.(`Prescription ${isDraft ? 'saved as draft' : 'created and sent'} with ID: ${prescriptionId}`);
       setPatientId(''); setDiagnosis(''); setMedicines([]); setFoundPatient(null);
     } catch (error) {
       console.error('Failed to save prescription:', error);
+      showError?.('Failed to save prescription. Please try again.');
     }
   };
 
@@ -188,8 +201,10 @@ function CreatePrescription() {
               type="text"
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && searchPatient()}
               placeholder="Enter Patient ID (e.g., PAT-001)"
               className="flex-1 px-4 py-3 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               required
             />
             <button 
               onClick={searchPatient}
@@ -212,6 +227,7 @@ function CreatePrescription() {
             onChange={(e) => setDiagnosis(e.target.value)}
             placeholder="Enter diagnosis, symptoms, and additional notes..."
             className="w-full h-32 px-4 py-3 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+             required
           />
         </div>
       </div>
@@ -262,6 +278,7 @@ function CreatePrescription() {
                   value={currentMedicine.name}
                   onChange={(e) => handleMedicineChange('name', e.target.value)}
                   placeholder="e.g., Amoxicillin"
+                  required
                   className="w-full px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -272,6 +289,7 @@ function CreatePrescription() {
                   value={currentMedicine.dosage}
                   onChange={(e) => handleMedicineChange('dosage', e.target.value)}
                   placeholder="e.g., 500mg"
+                  required
                   className="w-full px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -283,6 +301,7 @@ function CreatePrescription() {
                 <select
                   value={currentMedicine.frequency}
                   onChange={(e) => handleMedicineChange('frequency', e.target.value)}
+                  required
                   className="w-full px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select frequency</option>
@@ -297,6 +316,7 @@ function CreatePrescription() {
                 <select
                   value={currentMedicine.duration}
                   onChange={(e) => handleMedicineChange('duration', e.target.value)}
+                  required
                   className="w-full px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select duration</option>
@@ -316,6 +336,7 @@ function CreatePrescription() {
                 value={currentMedicine.instructions}
                 onChange={(e) => handleMedicineChange('instructions', e.target.value)}
                 placeholder="e.g., take with food"
+                required
                 className="w-full px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>

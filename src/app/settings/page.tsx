@@ -2,7 +2,13 @@
 import { FileText, Key, Save, Shield, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 
-function SettingsPage() {
+interface SettingsPageProps {
+  showSuccess?: (message: string) => void;
+  showError?: (message: string) => void;
+  showInfo?: (message: string) => void;
+}
+
+function SettingsPage({ showSuccess, showError, showInfo }: SettingsPageProps) {
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -26,40 +32,40 @@ function SettingsPage() {
 
   const saveProfile = () => {
     localStorage.setItem('doctorProfile', JSON.stringify(profileData));
-    alert('Profile saved successfully!');
+    showSuccess?.('Profile saved successfully!');
   };
 
   const saveClinic = () => {
     localStorage.setItem('clinicInfo', JSON.stringify(clinicData));
-    alert('Clinic information saved successfully!');
+    showSuccess?.('Clinic information saved successfully!');
   };
 
   const updatePassword = () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      console.warn('Please fill in all password fields.');
+      showError?.('Please fill in all password fields.');
       return;
     }
     
     if (newPassword !== confirmPassword) {
-      console.error('New password and confirmation do not match.');
+      showError?.('New password and confirmation do not match.');
       return;
     }
     
     const savedPassword = localStorage.getItem('userPassword');
     
     if (!savedPassword) {
-      console.error('No password set. Please contact administrator to set initial password.');
+      showError?.('No password set. Please contact administrator to set initial password.');
       return;
     }
     
     if (savedPassword !== currentPassword) {
-      console.error('Current password is incorrect.');
+      showError?.('Current password is incorrect.');
       return;
     }
     
     localStorage.setItem('userPassword', newPassword);
     localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
-    console.log('Password updated successfully!');
+    showSuccess?.('Password updated successfully!');
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
@@ -67,7 +73,7 @@ function SettingsPage() {
 
   const saveSecurity = () => {
     localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
-    alert('Security settings saved successfully!');
+    showSuccess?.('Security settings saved successfully!');
   };
 
   useEffect(() => {
@@ -133,9 +139,9 @@ function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Profile Information */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="card">
           <div className="flex items-center gap-3 mb-6">
-            <Users className="w-6 h-6 text-blue-600" />
+            <Users className="w-6 h-6 text-primary" />
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
               <p className="text-sm text-gray-600">Update your personal and professional information</p>
@@ -218,9 +224,9 @@ function SettingsPage() {
         </div>
         
         {/* Clinic Information */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="card">
           <div className="flex items-center gap-3 mb-6">
-            <FileText className="w-6 h-6 text-blue-600" />
+            <FileText className="w-6 h-6 text-primary" />
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Clinic Information</h2>
               <p className="text-sm text-gray-600">Manage your clinic or hospital details</p>
@@ -291,9 +297,9 @@ function SettingsPage() {
       </div>
 
       {/* Security Section */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <div className="card">
         <div className="flex items-center gap-3 mb-6">
-          <Shield className="w-6 h-6 text-blue-600" />
+          <Shield className="w-6 h-6 text-primary" />
           <div>
             <h2 className="text-xl font-semibold text-gray-900">Security & Privacy</h2>
             <p className="text-sm text-gray-600">Manage your account security settings</p>

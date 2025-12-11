@@ -1,7 +1,13 @@
 import { Plus, Save } from "lucide-react";
 import { useState } from "react";
 
-function AddPatient() {
+interface AddPatientProps {
+  showSuccess?: (message: string) => void;
+  showError?: (message: string) => void;
+  showInfo?: (message: string) => void;
+}
+
+function AddPatient({ showSuccess, showError, showInfo }: AddPatientProps) {
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
@@ -36,7 +42,7 @@ function AddPatient() {
     existingPatients.push(patientData);
     localStorage.setItem('patients', JSON.stringify(existingPatients));
     
-    alert(`Patient ${formData.fullName} saved successfully with ID: ${patientId}`);
+    showSuccess?.(`Patient ${formData.fullName} saved successfully with ID: ${patientId}`);
     setFormData({
       fullName: '', dateOfBirth: '', phoneNumber: '', emergencyPhone: '',
       gender: '', insuranceProvider: '', insuranceNumber: '', chronicDiseases: '', allergies: ''
@@ -51,7 +57,7 @@ function AddPatient() {
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-4xl">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="card">
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Patient Information</h2>
             <p className="text-sm text-gray-600">Enter the patient's personal and medical information</p>
@@ -67,7 +73,7 @@ function AddPatient() {
             <div className="bg-gray-50 p-6 rounded-lg space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <label className="form-label">Full Name</label>
                   <input
                     type="text"
                     name="fullName"
@@ -201,7 +207,7 @@ function AddPatient() {
           <div className="mt-8 flex justify-end">
             <button
               type="submit"
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 transition-colors"
+              className="btn btn-primary flex items-center gap-2"
             >
               <Save className="w-5 h-5" />
               Save Patient

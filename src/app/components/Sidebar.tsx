@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, Plus, Settings, Users, Menu, X } from "lucide-react";
+import { FileText, LayoutDashboard, Plus, Settings, Users, Menu, X, Clock, Stethoscope } from "lucide-react";
 import { PageType } from "../types";
 import { useState } from "react";
 
@@ -12,6 +12,7 @@ export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
   
   const menuItems: Array<{ id: PageType; icon: React.ElementType; label: string }> = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { id: 'queue', icon: Clock, label: 'Patient Queue' },
     { id: 'create-prescription', icon: Plus, label: 'Create Prescription' },
     { id: 'patient-records', icon: Users, label: 'Patient Records' },
     { id: 'prescription-history', icon: FileText, label: 'Prescription History' },
@@ -42,8 +43,14 @@ export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="mb-8">
-          <h1 className="text-xl font-bold text-white mb-2">MedEase</h1>
-          <p className="text-sm text-gray-400">Doctor Portal</p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+              <Stethoscope className="w-5 h-5 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-white">MedEase</h1>
+            
+          </div>
+          <p className="text-sm mx-10 text-gray-400">Doctor Portal</p>
           <hr className="border-gray-700 mt-4" />
         </div>
         

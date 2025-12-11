@@ -10,11 +10,15 @@ import PrescriptionHistory from './prescriptions/history/page';
 import SettingsPage from './settings/page';
 import AddPatient from './components/Addpatients';
 import ProfilePage from './components/ProfilePage';
+import PatientQueue from './components/PatientQueue';
 import Doctordashboard from './doctorDashboard/page';
+import { ToastContainer } from './components/Toast';
+import { useToast } from './hooks/useToast';
 
 export default function MedicalDashboard() {
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const { toasts, removeToast, showSuccess, showError, showInfo } = useToast();
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -24,7 +28,8 @@ export default function MedicalDashboard() {
         <Header setCurrentPage={setCurrentPage} />
         <main className="p-4 lg:p-8">
           {currentPage === 'dashboard' && <Doctordashboard setCurrentPage={setCurrentPage} />}
-          {currentPage === 'create-prescription' && <CreatePrescription />}
+          {currentPage === 'queue' && <PatientQueue setCurrentPage={setCurrentPage} />}
+          {currentPage === 'create-prescription' && <CreatePrescription showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
           {currentPage === 'patient-records' && (
             <PatientRecords 
               selectedPatient={selectedPatient} 
@@ -32,11 +37,12 @@ export default function MedicalDashboard() {
             />
           )}
           {currentPage === 'prescription-history' && <PrescriptionHistory />}
-          {currentPage === 'settings' && <SettingsPage />}
-          {currentPage === 'add-patient' && <AddPatient />}
+          {currentPage === 'settings' && <SettingsPage showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
+          {currentPage === 'add-patient' && <AddPatient showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
           {currentPage === 'profile' && <ProfilePage />}
         </main>
       </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

@@ -18,7 +18,16 @@ export interface Stat {
   icon: React.ElementType;
 }
 
-export type PageType = 'dashboard' | 'create-prescription' | 'patient-records' | 'prescription-history' | 'settings' | 'add-patient' | 'profile' ;
+export type PageType = 'dashboard' | 'create-prescription' | 'patient-records' | 'prescription-history' | 'settings' | 'add-patient' | 'profile' | 'queue' ;
+
+export interface QueuePatient {
+  id: string;
+  name: string;
+  appointmentTime: string;
+  reason: string;
+  status: 'waiting' | 'in-consultation' | 'completed';
+  queueNumber: number;
+}
 
 interface Medicine {
   id: string;

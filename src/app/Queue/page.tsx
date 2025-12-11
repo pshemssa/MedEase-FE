@@ -25,20 +25,47 @@ export default function QueuePage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!clinic || !department) return;
-    const position = Math.floor(Math.random() * 10) + 1;
+    
+    // Generate queue data
+    const queueId = `Q-${Date.now()}`;
+    const currentTime = new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    
+    // Get existing queue
+    const existingQueue = JSON.parse(localStorage.getItem('patientQueue') || '[]');
+    const queueNumber = existingQueue.length + 1;
+    
+    // Create queue patient object
+    const queuePatient = {
+      id: queueId,
+      name: 'Patient ' + queueNumber, // You can modify this to get actual patient name
+      appointmentTime: currentTime,
+      reason: department,
+      status: 'waiting' as const,
+      queueNumber: queueNumber
+    };
+    
+    // Add to queue
+    existingQueue.push(queuePatient);
+    localStorage.setItem('patientQueue', JSON.stringify(existingQueue));
+    
+    // Set local state
+    const position = queueNumber;
     setQueuePosition(position);
     setInQueue(true);
   };
 
   return (
     <div className="min-h-screen bg-blue-50 p-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="container-responsive">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Join Clinic Queue</h1>
 
         {!inQueue ? (
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8 space-y-6">
+          <form onSubmit={handleSubmit} className="card fade-in space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="form-label">
                 Clinic *
               </label>
               <input
@@ -47,7 +74,7 @@ export default function QueuePage() {
                 onChange={(e) => setClinic(e.target.value)}
                 placeholder="Enter clinic name"
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="form-input"
                 list="clinics-list"
               />
               <datalist id="clinics-list">
@@ -56,7 +83,7 @@ export default function QueuePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="form-label">
                 Department of Treatment *
               </label>
               <input
@@ -65,7 +92,7 @@ export default function QueuePage() {
                 onChange={(e) => setDepartment(e.target.value)}
                 placeholder="Enter department"
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="form-input"
                 list="departments-list"
               />
               <datalist id="departments-list">
@@ -74,7 +101,7 @@ export default function QueuePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="form-label">
                 Doctor (Optional)
               </label>
               <input
@@ -82,7 +109,7 @@ export default function QueuePage() {
                 value={doctor}
                 onChange={(e) => setDoctor(e.target.value)}
                 placeholder="Enter doctor name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="form-input"
                 list="doctors-list"
               />
               <datalist id="doctors-list">
@@ -92,13 +119,13 @@ export default function QueuePage() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+              className="btn btn-primary w-full py-3"
             >
               Join Queue
             </button>
           </form>
         ) : (
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="card fade-in">
             <div className="text-center space-y-6">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
               <h2 className="text-2xl font-bold text-gray-800">You're in the Queue!</h2>
