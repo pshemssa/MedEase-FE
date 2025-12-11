@@ -48,6 +48,7 @@ export default function RequestMedicalRecords() {
     if (verificationCode === generatedCode) {
       await new Promise((resolve) => setTimeout(resolve, 500))
       router.push("/report-ready")
+      setIsLoading(false)
     } else {
       setError("Invalid verification code. Please try again.")
       setIsLoading(false)
@@ -102,10 +103,11 @@ export default function RequestMedicalRecords() {
               </button>
             </div>
 
-            <Link href="/dashboard" className="block">
-              <button className="w-full border border-gray-300 bg-white hover:bg-gray-50 py-2 px-4 rounded-md">
-                Back to Dashboard
-              </button>
+            <Link 
+              href="/dashboard" 
+              className="block w-full border border-gray-300 bg-white hover:bg-gray-50 py-2 px-4 rounded-md text-center"
+            >
+              Back to Dashboard
             </Link>
           </div>
         </div>
