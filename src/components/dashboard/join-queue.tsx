@@ -6,7 +6,7 @@ export default function JoinQueue() {
   const router = useRouter()
   
   const handleJoinQueue = () => {
-    router.push('/Queue')
+    router.push('/Queue-status+')
   }
 
   return (

@@ -4,6 +4,7 @@ import MedicalHistory from "@/components/dashboard/medical-history"
 import MedicalInformation from "@/components/dashboard/medical-information"
 import MyPrescriptions from "@/components/dashboard/my-prescriptions"
 import JoinQueue from "@/components/dashboard/join-queue"
+import QueueStatus from "@/components/dashboard/queue-status"
 
 export default function Dashboard() {
   return (
@@ -27,6 +28,7 @@ export default function Dashboard() {
           
           <div className="lg:col-span-1 space-y-6">
             <JoinQueue />
+            <QueueStatus />
             <MedicalHistory />
           </div>
         </div>
