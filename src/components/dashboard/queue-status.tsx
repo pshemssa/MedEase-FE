@@ -34,13 +34,14 @@ export default function QueueStatus() {
     const fetchPosition = async () => {
       try {
         const res = await fetch('/api/queue/position');
-        if (res.ok) {
-          const data = await res.json();
-          setPosition(data.position);
+        if (!res.ok) {
+          throw new Error('Failed to fetch queue position');
         }
+        const data = await res.json();
+        setPosition(data.position);
       } catch {
-        // Fallback to simulation if API fails
-        setPosition(prev => prev > 1 ? prev - 1 : 1);
+        // Fallback to simulation if API fails (network or non-OK response)
+        setPosition(prev => (prev > 1 ? prev - 1 : 1));
       }
     };
     
