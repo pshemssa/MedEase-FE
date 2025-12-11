@@ -18,9 +18,13 @@ export default function QueueStatus() {
   useEffect(() => {
     const data = localStorage.getItem('queueData');
     if (data) {
-      const parsed = JSON.parse(data);
-      setQueueData(parsed);
-      setPosition(parsed.position);
+      try {
+        const parsed = JSON.parse(data);
+        setQueueData(parsed);
+        setPosition(parsed.position);
+      } catch {
+        localStorage.removeItem('queueData');
+      }
     }
   }, []);
 
