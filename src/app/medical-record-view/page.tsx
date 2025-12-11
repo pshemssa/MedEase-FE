@@ -8,7 +8,7 @@ export default function MedicalRecordView() {
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
         <div className="border-b border-gray-200 pb-6 mb-6">
           <h1 className="text-3xl font-bold text-blue-500 mb-2">Medical Record</h1>
-          <p className="text-gray-600">Generated on: {new Date().toLocaleString()}</p>
+          <p className="text-gray-600">Generated on: January 15, 2024</p>
         </div>
 
         <div className="space-y-6">
