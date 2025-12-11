@@ -12,13 +12,22 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
     const demoAccounts = [
       { email: 'demo@medease.rw', password: 'demo123', name: '<demo_patient>' },
       { email: 'patient@medease.rw', password: 'patient123', name: '<test_patient>' }
     ];
 
-    const account = demoAccounts.find(acc => acc.email === email && acc.password === password);
+    const account = demoAccounts.find(acc => acc.email === trimmedEmail && acc.password === trimmedPassword);
     
     if (account) {
       return NextResponse.json({

@@ -1,9 +1,12 @@
 "use client"
 import { FileText } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function MedicalHistory() {
+  const router = useRouter()
+  
   const handleRequestReport = () => {
-    console.log('Requesting medical report...')
+    router.push('/request-medical-records')
   }
 
   return (
