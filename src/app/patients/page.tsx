@@ -151,11 +151,11 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
   useEffect(() => {
     loadPatients();
     
-    // Listen for storage changes to refresh when new patients are added
+    
     const handleStorageChange = () => loadPatients();
     window.addEventListener('storage', handleStorageChange);
     
-    // Also check for updates every 2 seconds (for same-tab updates)
+  
     const interval = setInterval(loadPatients, 2000);
     
     return () => {

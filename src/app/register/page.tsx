@@ -151,10 +151,10 @@ export default function Register() {
         role: userRole,
         referenceNumber,
         ...sanitizedData,
-        password, // Include password in payload only (not in logs)
+        password, 
       }
 
-      // Log only non-sensitive data for debugging
+      
       console.log("Registration submitted:", { 
         role: userRole, 
         referenceNumber,
@@ -162,6 +162,8 @@ export default function Register() {
         firstName: formData.firstName,
         lastName: formData.lastName
       })
+      
+    
       if (userRole === "pharmacist") {
         setSuccessMessage(`Welcome, ${formData.firstName}! Your pharmacist registration has been submitted successfully for verification. Reference number: ${referenceNumber}. You will be notified once your credentials are verified.`)
       } else {
