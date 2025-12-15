@@ -46,6 +46,7 @@ export default function Register() {
   const [errors, setErrors] = useState<Partial<RegistrationFormData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -145,16 +146,6 @@ export default function Register() {
 
       const referenceNumber = `RW-${userRole.toUpperCase()}-${Date.now().toString().slice(-6)}`
       
-      const { confirmPassword, password, ...sanitizedData } = formData
-      
-      const registrationData = {
-        role: userRole,
-        referenceNumber,
-        ...sanitizedData,
-        password, 
-      }
-
-      
       console.log("Registration submitted:", { 
         role: userRole, 
         referenceNumber,
@@ -164,6 +155,9 @@ export default function Register() {
       })
       
     
+    
+      setErrorMessage("")
+      
       if (userRole === "pharmacist") {
         setSuccessMessage(`Welcome, ${formData.firstName}! Your pharmacist registration has been submitted successfully for verification. Reference number: ${referenceNumber}. You will be notified once your credentials are verified.`)
       } else {
@@ -187,7 +181,7 @@ export default function Register() {
 
       setTimeout(() => setSuccessMessage(""), 5000)
     } catch (error) {
-      console.error("Registration error:", error)
+      setErrorMessage("Registration failed. Please try again or contact support if the problem persists.")
     } finally {
       setIsSubmitting(false)
     }
@@ -228,6 +222,12 @@ export default function Register() {
           {successMessage && (
             <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm">
               {successMessage}
+            </div>
+          )}
+          
+          {errorMessage && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+              {errorMessage}
             </div>
           )}
 
@@ -341,11 +341,11 @@ export default function Register() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium">
+                      <Label htmlFor="patientPhone" className="text-sm font-medium">
                         Phone Number
                       </Label>
                       <Input
-                        id="phone"
+                        id="patientPhone"
                         name="phone"
                         type="tel"
                         placeholder="+250 788 123 456"
@@ -440,12 +440,12 @@ export default function Register() {
               {userRole === "pharmacist" && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-1">
+                    <Label htmlFor="pharmacistPhone" className="text-sm font-medium flex items-center gap-1">
                       <Phone className="h-4 w-4" />
                       Phone Number
                     </Label>
                     <Input
-                      id="phone"
+                      id="pharmacistPhone"
                       name="phone"
                       type="tel"
                       placeholder="+250 788 123 456"
