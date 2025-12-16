@@ -90,9 +90,9 @@ export default function Register() {
     } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       newErrors.email = "Please enter a valid email address"
     }
-    if (!formData.password) {
+    if (!formData.password.trim()) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {
+    } else if (formData.password.trim().length < 8) {
       newErrors.password = "Password must be at least 8 characters"
     }
     if (formData.password !== formData.confirmPassword) {
