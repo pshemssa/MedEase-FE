@@ -336,7 +336,7 @@ export default function Register() {
                         value={formData.gender || ""}
                         onChange={handleSelectChange}
                         disabled={isSubmitting}
-                        aria-invalid={errors.gender ? "true" : "false"}
+                        aria-invalid={!!errors.gender}
                         aria-describedby={errors.gender ? "gender-error" : undefined}
                         className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                           errors.gender ? "border-red-500" : "border-gray-300"
@@ -381,7 +381,7 @@ export default function Register() {
                       value={formData.insuranceProvider || ""}
                       onChange={handleSelectChange}
                       disabled={isSubmitting}
-                      aria-invalid={errors.insuranceProvider ? "true" : "false"}
+                      aria-invalid={!!errors.insuranceProvider}
                       aria-describedby={errors.insuranceProvider ? "insurance-error" : undefined}
                       className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         errors.insuranceProvider ? "border-red-500" : "border-gray-300"
