@@ -40,8 +40,7 @@ export default function Register() {
     insuranceProvider: "",
     insuranceNumber: "",
     phone: "",
-    licenseNumber: "",
-    pharmacyName: "",
+   
   })
   const [errors, setErrors] = useState<Partial<RegistrationFormData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
