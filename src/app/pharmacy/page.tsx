@@ -1,12 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Pill, QrCode, Search, History, Package } from 'lucide-react';
 
 export default function PharmacyDashboard() {
   const [activeTab, setActiveTab] = useState('retrieve');
   const [prescriptionRef, setPrescriptionRef] = useState('');
   const [currentPrescription, setCurrentPrescription] = useState<any>(null);
+  const [notes, setNotes] = useState('');
+  const [dispensingHistory, setDispensingHistory] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const history = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
+      setDispensingHistory(history);
+    } catch (error) {
+      console.error('Failed to load dispensing history:', error);
+      setDispensingHistory([]);
+    }
+  }, []);
 
   const mockPrescriptions = {
     'RX001': {
@@ -41,16 +53,25 @@ export default function PharmacyDashboard() {
 
   const handleConfirmDispensing = () => {
     if (currentPrescription) {
-      const dispensedItems = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
-      dispensedItems.push({
-        ...currentPrescription,
-        dispensedDate: new Date().toISOString(),
-        status: 'dispensed'
-      });
-      localStorage.setItem('dispensedHistory', JSON.stringify(dispensedItems));
-      setCurrentPrescription(null);
-      setPrescriptionRef('');
-      alert('Prescription dispensed successfully');
+      try {
+        const dispensedItems = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
+        const newItem = {
+          ...currentPrescription,
+          dispensedDate: new Date().toISOString(),
+          status: 'dispensed',
+          notes: notes
+        };
+        dispensedItems.push(newItem);
+        localStorage.setItem('dispensedHistory', JSON.stringify(dispensedItems));
+        setDispensingHistory(dispensedItems);
+        setCurrentPrescription(null);
+        setPrescriptionRef('');
+        setNotes('');
+        alert('Prescription dispensed successfully');
+      } catch (error) {
+        console.error('Failed to save dispensing record:', error);
+        alert('Failed to save dispensing record. Please try again.');
+      }
     }
   };
 
@@ -92,14 +113,22 @@ export default function PharmacyDashboard() {
 
         {/* Navigation Tabs */}
         <div className="bg-white rounded-lg shadow mb-6">
-          <div className="flex border-b">
+          <div className="flex border-b" role="tablist">
             <button
+              role="tab"
+              aria-selected={activeTab === 'retrieve'}
+              aria-controls="retrieve-panel"
+              id="retrieve-tab"
               onClick={() => setActiveTab('retrieve')}
               className={`px-6 py-3 font-medium ${activeTab === 'retrieve' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
             >
               Retrieve Prescription
             </button>
             <button
+              role="tab"
+              aria-selected={activeTab === 'history'}
+              aria-controls="history-panel"
+              id="history-tab"
               onClick={() => setActiveTab('history')}
               className={`px-6 py-3 font-medium ${activeTab === 'history' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
             >
@@ -107,7 +136,7 @@ export default function PharmacyDashboard() {
             </button>
           </div>
 
-          <div className="p-6">
+          <div className="p-6" role="tabpanel" id={`${activeTab}-panel`} aria-labelledby={`${activeTab}-tab`}>
             {activeTab === 'retrieve' && (
               <div className="space-y-6">
                 <div className="flex gap-4">
@@ -191,6 +220,8 @@ export default function PharmacyDashboard() {
 
                     <div className="mt-6">
                       <textarea
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
                         placeholder="Add notes for unavailable medicines..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         rows={3}
@@ -212,20 +243,25 @@ export default function PharmacyDashboard() {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Dispensing History</h3>
                 <div className="space-y-3">
-                  {JSON.parse(localStorage.getItem('dispensedHistory') || '[]').map((item: any, index: number) => (
-                    <div key={index} className="bg-gray-50 rounded-lg p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-medium">{item.patientName}</p>
-                          <p className="text-sm text-gray-600">Ref: {item.id}</p>
-                          <p className="text-sm text-gray-600">Dispensed: {new Date(item.dispensedDate).toLocaleDateString()}</p>
+                  {dispensingHistory.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">No dispensing history yet.</p>
+                  ) : (
+                    dispensingHistory.map((item: any, index: number) => (
+                      <div key={index} className="bg-gray-50 rounded-lg p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium">{item.patientName}</p>
+                            <p className="text-sm text-gray-600">Ref: {item.id}</p>
+                            <p className="text-sm text-gray-600">Dispensed: {new Date(item.dispensedDate).toLocaleDateString()}</p>
+                            {item.notes && <p className="text-sm text-gray-600">Notes: {item.notes}</p>}
+                          </div>
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
+                            Dispensed
+                          </span>
                         </div>
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
-                          Dispensed
-                        </span>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             )}
