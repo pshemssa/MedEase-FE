@@ -1,49 +1,359 @@
-'use client';
+import { Shield, CheckCircle, MessageCircle, Stethoscope, Pill, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import Link from "next/link"
+import AccessDashboardButton from "@/components/AccessDashboardButton"
+import ModalLoginGate from "@/components/ModalLoginGate"
 
-import { useState } from 'react';
-import type { PageType, Patient } from './types';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import CreatePrescription from './prescriptions/create/page';
-import PatientRecords from './patients/page';
-import PrescriptionHistory from './prescriptions/history/page';
-import SettingsPage from './settings/page';
-import AddPatient from './components/Addpatients';
-import ProfilePage from './components/ProfilePage';
-import PatientQueue from './components/PatientQueue';
-import Doctordashboard from './doctorDashboard/page';
-import { ToastContainer } from './components/Toast';
-import { useToast } from './hooks/useToast';
-
-export default function MedicalDashboard() {
-  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const { toasts, removeToast, showSuccess, showError, showInfo } = useToast();
-
+export default function HomePage() {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+    <div className="min-h-screen">
       
-      <div className="flex-1 overflow-auto lg:ml-0">
-        <Header setCurrentPage={setCurrentPage} />
-        <main className="p-4 lg:p-8">
-          {currentPage === 'dashboard' && <Doctordashboard setCurrentPage={setCurrentPage} />}
-          {currentPage === 'queue' && <PatientQueue setCurrentPage={setCurrentPage} />}
-          {currentPage === 'create-prescription' && <CreatePrescription showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
-          {currentPage === 'patient-records' && (
-            <PatientRecords 
-              selectedPatient={selectedPatient} 
-              setSelectedPatient={setSelectedPatient} 
-            />
-          )}
-          {currentPage === 'prescription-history' && <PrescriptionHistory />}
-          {currentPage === 'settings' && <SettingsPage showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
-          {currentPage === 'add-patient' && <AddPatient showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
-          {currentPage === 'profile' && <ProfilePage />}
-        </main>
-      </div>
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
-    </div>
-  );
-}
+      <header className="border-b bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-0">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">M</span>
+            </div>
+            <div>
+              <h1 className="text-xl  text-gray-900">MedEase</h1>
+              <p className="text-sm text-gray-600">Rwanda Digital Health</p>
+            </div>
+          </div>
+          <Link href="/?auth=login" className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+              />
+            </svg>
+            My Account
+          </Link>
+        </div>
+      </header>
+      <section className="bg-gradient-to-b from-blue-50 to-white py-12 sm:py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div>
+              <div className="flex items-center gap-2 text-blue-600 mb-4">
+                <Shield className="w-5 h-5" />
+                <span className="text-sm ">Republic of Rwanda - Ministry of Health</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                Digital Medical <br />
+                <span className="text-blue-600">Ordinance System</span>
+              </h1>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Secure, efficient, and connected healthcare for all Rwandans. Digital prescriptions, verified
+                authenticity, and AI-powered medical support.
+              </p>
+              <div className="flex flex-wrap gap-4 mb-8">
+                <div className="transition-transform hover:-translate-y-0.5">
+                  <AccessDashboardButton />
+                </div>
+                <Button
+                  size="lg"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-200  font-semibold hover:bg-blue-600 hover:text-white transition-colors"
+                >
+                  <Clock className="w-5 h-5" />
+                  Watch Demo
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-6">
+                <div className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-medium">MOH Certified</span>
+                </div>
+                <div className="flex items-center gap-2 text-green-600">
+                  <Shield className="w-5 h-5" />
+                  <span className="text-sm font-medium">HIPAA Compliant</span>
+                </div>
+                <div className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-medium">24/7 Available</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <Image
+                src="/healthcare-image.png"
+                alt="Medical professionals using digital system"
+                width={600}
+                height={500}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="rounded-2xl shadow-2xl w-full h-auto max-w-lg sm:max-w-xl md:max-w-2xl mx-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl  text-gray-900 mb-4">Complete Healthcare Digital Ecosystem</h2>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+              Connecting doctors, patients, and pharmacists through our core features of the system and AI-powered
+              medical assistance:
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-6">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl  text-gray-900 mb-3 text-center">Patient Portal</h3>
+              <p className="text-gray-500 text-sm leading-relaxed max-w-full sm:max-w-xs mx-auto text-center">
+                A centralized health profile with personal details, chronic conditions, allergies, and past treatments
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow hover:-translate-y-1 transform">
+              <div className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 mb-6">
+                <Stethoscope className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl  text-gray-900 mb-3">Smart Prescription Writing</h3>
+              <p className="text-gray-500 text-sm leading-relaxed max-w-full sm:max-w-xs mx-auto">
+                Create digital prescriptions, diagnosis notes, allergy alerts, and patient history to improve accuracy and safety.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow hover:-translate-y-1 transform">
+              <div className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 mb-6">
+                <Pill className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl  text-gray-900 mb-3">Seamless QR Verification</h3>
+              <p className="text-gray-500 text-sm leading-relaxed max-w-full sm:max-w-xs mx-auto">
+                Verify prescriptions with a QR scanner and mark medications as dispensed.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow hover:-translate-y-1 transform">
+              <div className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 mb-6">
+                <MessageCircle className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl  text-gray-900 mb-3">AI Assistant</h3>
+              <p className="text-gray-500 text-sm leading-relaxed max-w-full sm:max-w-xs mx-auto">
+                24/7 medical guidance, dosage info, and appointment scheduling.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section className="bg-blue-500 py-12 sm:py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center text-white">
+          <h3 className="text-4xl  mb-6">Ready To Get Started</h3>
+          <p className="text-lg mb-10 opacity-95 max-w-3xl mx-auto">
+            Start your journey with paperless, secure medical prescriptions by joining thousands of doctors, patients,
+            and pharmacists transforming healthcare in Rwanda
+          </p>
+          <div className="flex justify-center">
+            <Link href="/register" className="inline-block w-full sm:w-auto">
+              <Button className="bg-white text-blue-500 px-12 py-4 rounded-lg hover:bg-blue-600 hover:text-white transition-colors text-lg w-full sm:w-auto">
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  
+          <div className="text-center mb-12 md:mb-20">
+            <h3 className="text-3xl md:text-4xl  text-gray-900">What We Do</h3>
+          </div>
+          <div className="relative">
+            <svg
+              className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none"
+              style={{ top: 0, left: 0 }}
+            >
+
+              <line x1="45%" y1="80" x2="50%" y2="80" stroke="#d1d5db" strokeWidth="2" strokeDasharray="5,5" />
+              <line x1="50%" y1="80" x2="50%" y2="650" stroke="#d1d5db" strokeWidth="2" strokeDasharray="5,5" />
+              <line x1="50%" y1="330" x2="55%" y2="330" stroke="#d1d5db" strokeWidth="2" strokeDasharray="5,5" />
+              <line x1="50%" y1="650" x2="45%" y2="650" stroke="#d1d5db" strokeWidth="2" strokeDasharray="5,5" />
+            </svg>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+            
+              <div className="space-y-32">
+              
+                <div className="max-w-full sm:max-w-sm">
+                  <h4 className="text-xl  text-blue-600 mb-4">Simplify Access to Medical Records</h4>
+                  <p className="text-gray-600 text-base leading-relaxed">
+                    Patients can securely access their historical medical records, including past diagnoses,
+                    prescriptions, and treating doctors. A simple email + OTP verification process makes records
+                    available on demand, supporting better follow-up care and transparency in treatment history
+                  </p>
+                </div>
+
+                <div className="max-w-full sm:max-w-sm">
+                  <h4 className="text-xl  text-blue-600 mb-4">Ensure Patient Safety</h4>
+                  <p className="text-gray-600 text-base leading-relaxed">
+                    The system stores critical medical information such as allergies, chronic conditions, and past
+                    prescriptions. Doctors and pharmacists have instant access to this data, helping them avoid harmful
+                    drug interactions and ensuring patients receive safe, accurate treatment every time
+                  </p>
+                </div>
+              </div>
+              <div className="hidden lg:block"></div>
+              <div className="flex items-center justify-end lg:pt-16">
+                <div className="max-w-full sm:max-w-sm">
+                  <h4 className="text-xl  text-blue-600 mb-4">Enable Paperless Prescriptions</h4>
+                  <p className="text-gray-600 text-base leading-relaxed">
+                    We provide a secure digital platform that replaces paper prescriptions. Doctors create prescriptions
+                    directly in the system, patients instantly receive a reference number or QR code, and pharmacists
+     can verify and dispense medicines without delays. This eliminates lost prescriptions, reduces costs,
+                    and ensures treatment continuity
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl  text-blue-600 mb-6">Join Our Newsletter</h2>
+          <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+            Sign to our NEWSLETTER and be first to know about any of our new features:
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+            <input
+              type="email"
+              placeholder="Email here"
+              className="flex-1 px-6 py-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            />
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8">
+              Subscribe
+            </Button>
+          </div>
+        </div>
+      </section>
+      <footer className="bg-blue-500 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <ul className="space-y-3">
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> Home
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> Some of our feature
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> Get started
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> What we do
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> How it works
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-green-400 text-xl  mb-4">Quick Links:</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> Patient Portal
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> Doctor Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline flex items-center">
+                    <span className="mr-2">›</span> Pharmacy Tool
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-green-400 text-xl  mb-4">Contact us:</h3>
+              <div className="space-y-3">
+                <p className="whitespace-nowrap">
+                  <strong>Address:</strong> KN 3 Ave, 30 St Kigali - Rwanda
+                </p>
+                <p>
+                  <strong>Phone:</strong> +250 788 195 705 
+                </p>
+                <p>
+                  <strong>Email:</strong> medease@gmail.com
+                </p>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-green-400 text-xl  mb-4">Follow us:</h3>
+              <div className="flex gap-4">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700"
+                >
+                  <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                    <path d="M17.5 6.5h.01" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-blue-400 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+            <p>© Copyright SheCanCODE. All Rights Reserved</p>
+            <div className="flex gap-6 mt-4 md:mt-0">
+              <a href="#" className="hover:underline">
+                FAQ
+              </a>
+              <a href="#" className="hover:underline">
+                Privacy Policy
+              </a>
+              <a href="#" className="hover:underline">
+                Terms of Use
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <ModalLoginGate />
+    </div>
+  )
+}

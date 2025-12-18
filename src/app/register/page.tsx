@@ -85,11 +85,12 @@ export default function Register() {
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required"
     }
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required"
-    } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+
+    // Email is optional, but if provided it must be valid
+    if (formData.email.trim() && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       newErrors.email = "Please enter a valid email address"
     }
+
     if (!formData.password.trim()) {
       newErrors.password = "Password is required"
     } else if (formData.password.trim().length < 8) {
@@ -97,6 +98,16 @@ export default function Register() {
     }
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match"
+    }
+
+    // For patient and pharmacist: require at least one of email or phone
+    if (userRole === "patient" || userRole === "pharmacist") {
+      const hasEmail = !!formData.email.trim()
+      const hasPhone = !!formData.phone?.trim()
+      if (!hasEmail && !hasPhone) {
+        newErrors.email = "Provide either email or phone number"
+        newErrors.phone = "Provide either phone number or email"
+      }
     }
 
     if (userRole === "patient") {
@@ -112,15 +123,9 @@ export default function Register() {
       if (!formData.insuranceNumber?.trim()) {
         newErrors.insuranceNumber = "Insurance number is required"
       }
-      if (!formData.phone?.trim()) {
-        newErrors.phone = "Phone number is required"
-      }
     }
 
     if (userRole === "pharmacist") {
-      if (!formData.phone?.trim()) {
-        newErrors.phone = "Phone number is required"
-      }
       if (!formData.licenseNumber?.trim()) {
         newErrors.licenseNumber = "License number is required"
       }

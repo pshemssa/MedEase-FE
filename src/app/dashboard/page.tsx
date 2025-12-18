@@ -1,38 +1,48 @@
-import DashboardHeader from "@/components/dashboard/dashboard-header"
-import ProfileOverview from "@/components/dashboard/profile-overview"
-import MedicalHistory from "@/components/dashboard/medical-history"
-import MedicalInformation from "@/components/dashboard/medical-information"
-import MyPrescriptions from "@/components/dashboard/my-prescriptions"
-import JoinQueue from "@/components/dashboard/join-queue"
-import QueueStatus from "@/components/dashboard/queue-status"
+'use client';
 
-export default function Dashboard() {
+import { useState } from 'react';
+import type { PageType, Patient } from '../types';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
+import CreatePrescription from '../prescriptions/create/page';
+import PatientRecords from '../patients/page';
+import PrescriptionHistory from '../prescriptions/history/page';
+import SettingsPage from '../settings/page';
+import AddPatient from '../components/Addpatients';
+import ProfilePage from '../components/ProfilePage';
+import PatientQueue from '../components/PatientQueue';
+import Doctordashboard from '../doctorDashboard/page';
+import { ToastContainer } from '../components/Toast';
+import { useToast } from '../hooks/useToast';
+
+export default function MedicalDashboard() {
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const { toasts, removeToast, showSuccess, showError, showInfo } = useToast();
+
   return (
-    <main className="min-h-screen bg-gray-50 relative">
-      <DashboardHeader />
-      <div className="px-4 py-6 -mt-16 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <ProfileOverview 
-              name="<name>"
-              initials="<initials>"
-              referenceId="<reference_id>"
-              dateOfBirth="<date_of_birth>"
-              insurance="<insurance_provider>"
-              email="<email>"
-              phone="<phone_number>"
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      
+      <div className="flex-1 overflow-auto lg:ml-0">
+        <Header setCurrentPage={setCurrentPage} />
+        <main className="p-4 lg:p-8">
+          {currentPage === 'dashboard' && <Doctordashboard setCurrentPage={setCurrentPage} />}
+          {currentPage === 'queue' && <PatientQueue setCurrentPage={setCurrentPage} />}
+          {currentPage === 'create-prescription' && <CreatePrescription showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
+          {currentPage === 'patient-records' && (
+            <PatientRecords 
+              selectedPatient={selectedPatient} 
+              setSelectedPatient={setSelectedPatient} 
             />
-            <MedicalInformation />
-            <MyPrescriptions />
-          </div>
-          
-          <div className="lg:col-span-1 space-y-6">
-            <JoinQueue />
-            <QueueStatus />
-            <MedicalHistory />
-          </div>
-        </div>
+          )}
+          {currentPage === 'prescription-history' && <PrescriptionHistory />}
+          {currentPage === 'settings' && <SettingsPage showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
+          {currentPage === 'add-patient' && <AddPatient showSuccess={showSuccess} showError={showError} showInfo={showInfo} />}
+          {currentPage === 'profile' && <ProfilePage />}
+        </main>
       </div>
-    </main>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+    </div>
   );
 }
