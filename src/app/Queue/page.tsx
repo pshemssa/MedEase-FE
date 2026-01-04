@@ -58,72 +58,72 @@ export default function QueuePage() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 p-6">
-      <div className="container-responsive">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Join Clinic Queue</h1>
+   <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-md mx-auto mt-12 bg-white rounded-lg shadow-lg p-8">
+        <h1 className="text-2xl font-bold text-center mb-8">Join Queue</h1>
 
         {!inQueue ? (
-          <form onSubmit={handleSubmit} className="card fade-in space-y-6">
-            <div>
-              <label className="form-label">
-                Clinic *
-              </label>
-              <input
-                type="text"
-                value={clinic}
-                onChange={(e) => setClinic(e.target.value)}
-                placeholder="Enter clinic name"
-                required
-                className="form-input"
-                list="clinics-list"
-              />
-              <datalist id="clinics-list">
-                {clinics.map(c => <option key={c} value={c} />)}
-              </datalist>
-            </div>
-
-            <div>
-              <label className="form-label">
-                Department of Treatment *
-              </label>
-              <input
-                type="text"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                placeholder="Enter department"
-                required
-                className="form-input"
-                list="departments-list"
-              />
-              <datalist id="departments-list">
-                {departments.map(d => <option key={d} value={d} />)}
-              </datalist>
-            </div>
-
-            <div>
-              <label className="form-label">
-                Doctor (Optional)
-              </label>
-              <input
-                type="text"
-                value={doctor}
-                onChange={(e) => setDoctor(e.target.value)}
-                placeholder="Enter doctor name"
-                className="form-input"
-                list="doctors-list"
-              />
-              <datalist id="doctors-list">
-                {doctors.map(d => <option key={d} value={d} />)}
-              </datalist>
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary w-full py-3"
+          <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Clinic
+            </label>
+            <select
+              value={clinic}
+              onChange={(e) => setClinic(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md"
             >
-              Join Queue
-            </button>
-          </form>
+              <option value="">Choose clinic</option>
+              <option value="City Medical Center">City Medical Center</option>
+              <option value="Downtown Clinic">Downtown Clinic</option>
+              <option value="Westside Health">Westside Health</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Department
+            </label>
+            <select
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md"
+            >
+              <option value="">Choose department</option>
+              <option value="General Medicine">General Medicine</option>
+              <option value="Cardiology">Cardiology</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="Pediatrics">Pediatrics</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Doctor
+            </label>
+            <select
+              value={doctor}
+              onChange={(e) => setDoctor(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md"
+            >
+              <option value="">Choose doctor</option>
+              <option value="Dr. Sarah Johnson">Dr. Sarah Johnson</option>
+              <option value="Dr. Michael Chen">Dr. Michael Chen</option>
+              <option value="Dr. Emily Davis">Dr. Emily Davis</option>
+              <option value="Dr. Robert Wilson">Dr. Robert Wilson</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-md"
+          >
+            Join Queue
+          </button>
+        </form>
         ) : (
           <div className="card fade-in">
             <div className="text-center space-y-6">
