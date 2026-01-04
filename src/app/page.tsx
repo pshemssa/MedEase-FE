@@ -54,7 +54,6 @@ export default function HomePage() {
                   <AccessDashboardButton />
                 </div>
                 <Button
-                  size="lg"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-200  font-semibold hover:bg-blue-600 hover:text-white transition-colors"
                 >
                   <Clock className="w-5 h-5" />
@@ -148,16 +147,16 @@ export default function HomePage() {
       </section>
       
       <section className="bg-blue-500 py-12 sm:py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center text-white">
-          <h3 className="text-4xl  mb-6">Ready To Get Started</h3>
-          <p className="text-lg mb-10 opacity-95 max-w-3xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center ">
+          <h3 className="text-4xl text-white  mb-6">Ready To Get Started</h3>
+          <p className="text-lg mb-10 opacity-95 text-white max-w-3xl mx-auto">
             Start your journey with paperless, secure medical prescriptions by joining thousands of doctors, patients,
             and pharmacists transforming healthcare in Rwanda
           </p>
           <div className="flex justify-center">
             <Link href="/register" className="inline-block w-full sm:w-auto">
-              <Button className="bg-white text-blue-500 px-12 py-4 rounded-lg hover:bg-blue-600 hover:text-white transition-colors text-lg w-full sm:w-auto">
-                Get Started
+              <Button className="bg-white  px-12 py-4 rounded-lg hover:bg-blue-600 transition-colors text-lg w-full sm:w-auto">
+                <span className="text-blue-500 hover:text-white ">Get Started</span>
               </Button>
             </Link>
           </div>
@@ -233,7 +232,7 @@ export default function HomePage() {
               placeholder="Email here"
               className="flex-1 px-6 py-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8">
               Subscribe
             </Button>
           </div>
@@ -275,17 +274,17 @@ export default function HomePage() {
               <h3 className="text-green-400 text-xl  mb-4">Quick Links:</h3>
               <ul className="space-y-3">
                 <li>
-                  <a href="#" className="hover:underline flex items-center">
+                  <a href="/login" className="hover:underline flex items-center">
                     <span className="mr-2">›</span> Patient Portal
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline flex items-center">
+                  <a href="/login" className="hover:underline flex items-center">
                     <span className="mr-2">›</span> Doctor Dashboard
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline flex items-center">
+                  <a href="/login" className="hover:underline flex items-center">
                     <span className="mr-2">›</span> Pharmacy Tool
                   </a>
                 </li>
