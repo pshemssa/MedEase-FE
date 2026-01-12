@@ -1,3 +1,5 @@
+'use client';
+
 import { Shield, CheckCircle, MessageCircle, Stethoscope, Pill, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
