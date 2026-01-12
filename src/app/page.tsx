@@ -1,14 +1,26 @@
 "use client"
 
-import { Shield, CheckCircle, MessageCircle, Stethoscope, Pill, Clock } from "lucide-react"
+import { Shield, CheckCircle, MessageCircle, Stethoscope, Pill, Clock, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import AccessDashboardButton from "@/components/AccessDashboardButton"
 import ModalLoginGate from "@/components/ModalLoginGate"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function HomePage() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -30,32 +42,62 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       
-      <header className="border-b bg-white">
+      <header className="bg-white fixed top-0 left-0 right-0 z-50 shadow-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">M</span>
+              <Stethoscope className="text-white w-6 h-6" />
             </div>
-            <div>
+            <div className="hidden sm:block">
               <h1 className="text-xl  text-gray-900">MedEase</h1>
               <p className="text-sm text-gray-600">Rwanda Digital Health</p>
             </div>
           </div>
-          <Link href="/?auth=login" className="inline-flex items-center gap-2 px-2 py-1 sm:px-4 sm:py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-              />
-            </svg>
-            <span className="hidden sm:inline">My Account</span>
-            <span className="sm:hidden text-sm">My Account</span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/?auth=login" className={`hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base transition-opacity duration-300`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                />
+              </svg>
+              My Account
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="sm:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+        {isMobileMenuOpen && (
+          <div className="sm:hidden bg-blue-400 fixed top-16 left-0 right-0 z-40 shadow-md">
+            <div className="px-4 py-4 space-y-3">
+              <div className="text-center mb-4">
+                <h1 className="text-xl text-white">MedEase</h1>
+                <p className="text-sm text-blue-100">Rwanda Digital Health</p>
+              </div>
+              <div className="flex justify-center">
+                <Link href="/?auth=login" className="flex items-center gap-1 px-2 py-1 rounded-md bg-white text-blue-600 hover:bg-blue-50 text-xs">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  My Account
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
-      <section className="bg-gradient-to-b from-blue-50 to-white py-12 sm:py-16 md:py-24">
+      <section className="bg-gradient-to-b from-blue-50 to-white py-12 sm:py-16 md:py-24 pt-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
@@ -121,8 +163,8 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 scroll-animate">
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-6">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
+              <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-6">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
