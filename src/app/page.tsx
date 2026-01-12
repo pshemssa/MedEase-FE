@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import AccessDashboardButton from "@/components/AccessDashboardButton"
-import ModalLoginGate from "@/components/ModalLoginGate"
+import dynamic from "next/dynamic"
+
+const ModalLoginGate = dynamic(() => import("@/components/ModalLoginGate"), {
+  ssr: false
+})
 
 export default function HomePage() {
   return (
