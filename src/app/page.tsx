@@ -1,24 +1,12 @@
-<<<<<<< HEAD
-'use client';
-=======
 "use client"
->>>>>>> upstream/main
 
 import { Shield, CheckCircle, MessageCircle, Stethoscope, Pill, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import AccessDashboardButton from "@/components/AccessDashboardButton"
-<<<<<<< HEAD
-import dynamic from "next/dynamic"
-
-const ModalLoginGate = dynamic(() => import("@/components/ModalLoginGate"), {
-  ssr: false
-})
-=======
 import ModalLoginGate from "@/components/ModalLoginGate"
 import { useEffect } from "react"
->>>>>>> upstream/main
 
 export default function HomePage() {
   useEffect(() => {
