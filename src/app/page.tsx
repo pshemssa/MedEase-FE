@@ -31,7 +31,7 @@ export default function HomePage() {
     <div className="min-h-screen">
       
       <header className="border-b bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-0">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
               <span className="text-white text-2xl font-bold">M</span>
@@ -41,8 +41,8 @@ export default function HomePage() {
               <p className="text-sm text-gray-600">Rwanda Digital Health</p>
             </div>
           </div>
-          <Link href="/?auth=login" className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <Link href="/?auth=login" className="inline-flex items-center gap-2 px-2 py-1 sm:px-4 sm:py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -50,7 +50,8 @@ export default function HomePage() {
                 d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
               />
             </svg>
-            My Account
+            <span className="hidden sm:inline">My Account</span>
+            <span className="sm:hidden text-sm">My Account</span>
           </Link>
         </div>
       </header>
