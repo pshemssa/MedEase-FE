@@ -1,6 +1,6 @@
 'use client';
 
-import CreatePrescription from './create/page';
+import CreatePrescription from '../prescriptions/create/page';
 
 export default function CreatePrescriptionPage() {
   return <CreatePrescription />;

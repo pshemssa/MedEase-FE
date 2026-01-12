@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import LoginForm from "@/components/auth/LoginForm"
 
-export default function ModalLoginGate() {
+function ModalContent() {
   const params = useSearchParams()
   const showLogin = params.get("auth") === "login"
 
@@ -37,5 +37,13 @@ export default function ModalLoginGate() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ModalLoginGate() {
+  return (
+    <Suspense fallback={null}>
+      <ModalContent />
+    </Suspense>
   )
 }

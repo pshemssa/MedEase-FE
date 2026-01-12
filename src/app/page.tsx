@@ -1,17 +1,44 @@
+<<<<<<< HEAD
 'use client';
+=======
+"use client"
+>>>>>>> upstream/main
 
 import { Shield, CheckCircle, MessageCircle, Stethoscope, Pill, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import AccessDashboardButton from "@/components/AccessDashboardButton"
+<<<<<<< HEAD
 import dynamic from "next/dynamic"
 
 const ModalLoginGate = dynamic(() => import("@/components/ModalLoginGate"), {
   ssr: false
 })
+=======
+import ModalLoginGate from "@/components/ModalLoginGate"
+import { useEffect } from "react"
+>>>>>>> upstream/main
 
 export default function HomePage() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in')
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    document.querySelectorAll('.scroll-animate').forEach((el) => {
+      observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [])
   return (
     <div className="min-h-screen">
       
@@ -47,15 +74,15 @@ export default function HomePage() {
                 <Shield className="w-5 h-5" />
                 <span className="text-sm ">Republic of Rwanda - Ministry of Health</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in-up">
                 Digital Medical <br />
                 <span className="text-blue-600">Ordinance System</span>
               </h1>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
                 Secure, efficient, and connected healthcare for all Rwandans. Digital prescriptions, verified
                 authenticity, and AI-powered medical support.
               </p>
-              <div className="flex flex-wrap gap-4 mb-8">
+              <div className="flex flex-wrap gap-4 mb-8 animate-fade-in-up animation-delay-400">
                 <div className="transition-transform hover:-translate-y-0.5">
                   <AccessDashboardButton />
                 </div>
@@ -66,7 +93,7 @@ export default function HomePage() {
                   Watch Demo
                 </Button>
               </div>
-              <div className="flex flex-wrap gap-6">
+              <div className="flex flex-wrap gap-6 animate-fade-in-up animation-delay-600">
                 <div className="flex items-center gap-2 text-green-600">
                   <CheckCircle className="w-5 h-5" />
                   <span className="text-sm font-medium">MOH Certified</span>
@@ -81,14 +108,14 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative animate-fade-in-left animation-delay-300">
               <Image
                 src="/healthcare-image.png"
                 alt="Medical professionals using digital system"
                 width={600}
                 height={500}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="rounded-2xl shadow-2xl w-full h-auto max-w-lg sm:max-w-xl md:max-w-2xl mx-auto"
+                className="rounded-2xl shadow-2xl w-full h-auto max-w-lg sm:max-w-xl md:max-w-2xl mx-auto hover:scale-105 transition-transform duration-300"
               />
             </div>
           </div>
@@ -97,14 +124,14 @@ export default function HomePage() {
 
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 scroll-animate">
             <h2 className="text-4xl md:text-5xl  text-gray-900 mb-4">Complete Healthcare Digital Ecosystem</h2>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto">
               Connecting doctors, patients, and pharmacists through our core features of the system and AI-powered
               medical assistance:
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 scroll-animate">
             <div className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-shadow">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-6">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +148,7 @@ export default function HomePage() {
                 A centralized health profile with personal details, chronic conditions, allergies, and past treatments
               </p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow hover:-translate-y-1 transform">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
               <div className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 mb-6">
                 <Stethoscope className="w-7 h-7 text-white" />
               </div>
@@ -130,7 +157,7 @@ export default function HomePage() {
                 Create digital prescriptions, diagnosis notes, allergy alerts, and patient history to improve accuracy and safety.
               </p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow hover:-translate-y-1 transform">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
               <div className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 mb-6">
                 <Pill className="w-7 h-7 text-white" />
               </div>
@@ -139,7 +166,7 @@ export default function HomePage() {
                 Verify prescriptions with a QR scanner and mark medications as dispensed.
               </p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow hover:-translate-y-1 transform">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
               <div className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 mb-6">
                 <MessageCircle className="w-7 h-7 text-white" />
               </div>
@@ -153,7 +180,7 @@ export default function HomePage() {
       </section>
       
       <section className="bg-blue-500 py-12 sm:py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center scroll-animate">
           <h3 className="text-4xl text-white  mb-6">Ready To Get Started</h3>
           <p className="text-lg mb-10 opacity-95 text-white max-w-3xl mx-auto">
             Start your journey with paperless, secure medical prescriptions by joining thousands of doctors, patients,
@@ -173,7 +200,7 @@ export default function HomePage() {
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   
-          <div className="text-center mb-12 md:mb-20">
+          <div className="text-center mb-12 md:mb-20 scroll-animate">
             <h3 className="text-3xl md:text-4xl  text-gray-900">What We Do</h3>
           </div>
           <div className="relative">
@@ -190,7 +217,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             
-              <div className="space-y-32">
+              <div className="space-y-32 scroll-animate">
               
                 <div className="max-w-full sm:max-w-sm">
                   <h4 className="text-xl  text-blue-600 mb-4">Simplify Access to Medical Records</h4>
@@ -211,7 +238,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="hidden lg:block"></div>
-              <div className="flex items-center justify-end lg:pt-16">
+              <div className="flex items-center justify-end lg:pt-16 scroll-animate">
                 <div className="max-w-full sm:max-w-sm">
                   <h4 className="text-xl  text-blue-600 mb-4">Enable Paperless Prescriptions</h4>
                   <p className="text-gray-600 text-base leading-relaxed">
@@ -227,7 +254,7 @@ export default function HomePage() {
         </div>
       </section>
       <section className="py-16 md:py-24 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center scroll-animate">
           <h2 className="text-4xl md:text-5xl  text-blue-600 mb-6">Join Our Newsletter</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
             Sign to our NEWSLETTER and be first to know about any of our new features:
@@ -245,7 +272,7 @@ export default function HomePage() {
         </div>
       </section>
       <footer className="bg-blue-500 text-white py-12">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 scroll-animate">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <ul className="space-y-3">

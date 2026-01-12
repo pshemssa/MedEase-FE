@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { UserPlus, User, Pill, Mail, Lock, Phone, Calendar, Shield } from "lucide-react"
+import { UserPlus, User, Pill, Mail, Lock, Phone, Calendar, Shield, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 type UserRole = "patient" | "pharmacist"
 
@@ -28,6 +29,7 @@ interface RegistrationFormData {
 }
 
 export default function Register() {
+  const router = useRouter()
   const [userRole, setUserRole] = useState<UserRole>("patient")
   const [formData, setFormData] = useState<RegistrationFormData>({
     firstName: "",
@@ -47,6 +49,25 @@ export default function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: "" })
+  const [showSuccessCard, setShowSuccessCard] = useState(false)
+
+  const checkPasswordStrength = (password: string) => {
+    let score = 0
+    let feedback = ""
+    
+    if (password.length >= 8) score++
+    if (/[a-z]/.test(password)) score++
+    if (/[A-Z]/.test(password)) score++
+    if (/\d/.test(password)) score++
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++
+    
+    if (score < 3) feedback = "Weak - Add uppercase, numbers, and symbols"
+    else if (score < 4) feedback = "Medium - Add more character types"
+    else feedback = "Strong password"
+    
+    return { score, feedback }
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -54,6 +75,11 @@ export default function Register() {
       ...prev,
       [name]: value,
     }))
+    
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value))
+    }
+    
     if (errors[name as keyof RegistrationFormData]) {
       setErrors((prev) => ({
         ...prev,
@@ -95,6 +121,8 @@ export default function Register() {
       newErrors.password = "Password is required"
     } else if (formData.password.trim().length < 8) {
       newErrors.password = "Password must be at least 8 characters"
+    } else if (passwordStrength.score < 3) {
+      newErrors.password = "Password is too weak. Use uppercase, lowercase, numbers, and symbols"
     }
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match"
@@ -163,28 +191,11 @@ export default function Register() {
     
       setErrorMessage("")
       
-      if (userRole === "pharmacist") {
-        setSuccessMessage(`Welcome, ${formData.firstName}! Your pharmacist registration has been submitted successfully for verification. Reference number: ${referenceNumber}. You will be notified once your credentials are verified.`)
-      } else {
-        setSuccessMessage(`Welcome, ${formData.firstName}! Your ${userRole} account has been created successfully. Your reference number is: ${referenceNumber}`)
-      }
-
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        dateOfBirth: "",
-        gender: "",
-        insuranceProvider: "",
-        insuranceNumber: "",
-        phone: "",
-        licenseNumber: "",
-        pharmacyName: "",
-      })
-
-      setTimeout(() => setSuccessMessage(""), 5000)
+      setShowSuccessCard(true)
+      
+      setTimeout(() => {
+        router.push('/login')
+      }, 3000)
     } catch (error) {
       setErrorMessage("Registration failed. Please try again or contact support if the problem persists.")
     } finally {
@@ -193,6 +204,22 @@ export default function Register() {
   }
 
   return (
+    <>
+      {showSuccessCard && (
+        <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50">
+          <Card className="w-full max-w-md mx-4 bg-white shadow-2xl">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Registration Successful!</h3>
+              <p className="text-gray-600 mb-4">Your account has been created successfully.</p>
+              <p className="text-sm text-gray-500">Redirecting to sign in...</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+      
     <div className={`min-h-screen flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8 relative transition-all duration-500 ${
       userRole === "patient" 
         ? "bg-gradient-to-br from-blue-50 to-blue-100" 
@@ -455,6 +482,32 @@ export default function Register() {
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
                 />
+                {formData.password && (
+                  <div className="mt-2">
+                    <div className="flex gap-1 mb-1">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div
+                          key={i}
+                          className={`h-1 flex-1 rounded ${
+                            i <= passwordStrength.score
+                              ? passwordStrength.score < 3
+                                ? "bg-red-500"
+                                : passwordStrength.score < 4
+                                ? "bg-yellow-500"
+                                : "bg-green-500"
+                              : "bg-gray-200"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <p className={`text-xs ${
+                      passwordStrength.score < 3 ? "text-red-600" :
+                      passwordStrength.score < 4 ? "text-yellow-600" : "text-green-600"
+                    }`}>
+                      {passwordStrength.feedback}
+                    </p>
+                  </div>
+                )}
                 {errors.password && <p id="password-error" className="text-xs text-red-500">{errors.password}</p>}
               </div>
 
@@ -568,6 +621,7 @@ export default function Register() {
         </CardContent>
       </Card>
     </div>
+    </>
   )
 }
 
