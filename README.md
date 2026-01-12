@@ -134,7 +134,7 @@ src/app/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/pshemssa/MedEase-FE
 cd MedEase-FE
 
 # Install dependencies
