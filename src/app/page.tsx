@@ -117,12 +117,13 @@ export default function HomePage() {
                 <div className="transition-transform hover:-translate-y-0.5">
                   <AccessDashboardButton />
                 </div>
-                <Button
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-200  font-semibold hover:bg-blue-600 hover:text-white transition-colors"
+                <button
+                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 text-white shadow-lg focus:outline-none "
+                    aria-label="watch-demo"
                 >
                   <Clock className="w-5 h-5" />
                   Watch Demo
-                </Button>
+                </button>
               </div>
               <div className="flex flex-wrap gap-6 animate-fade-in-up animation-delay-600">
                 <div className="flex items-center gap-2 text-green-600">

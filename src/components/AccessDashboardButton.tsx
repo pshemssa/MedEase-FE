@@ -42,7 +42,7 @@ export default function AccessDashboardButton() {
   return (
     <button
       onClick={handleClick}
-      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 text-white shadow-lg focus:outline-none"
       aria-label="Access dashboard"
     >
       <QrCode className="w-5 h-5" />
