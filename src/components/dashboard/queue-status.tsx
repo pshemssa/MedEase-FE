@@ -33,15 +33,18 @@ export default function QueueStatus() {
     
     const fetchPosition = async () => {
       try {
-        const res = await fetch('/api/queue/position');
+        const queueId = queueData.queueId;
+        const res = await fetch(`/api/queue/position${queueId ? `?queueId=${queueId}` : ''}`);
         if (!res.ok) {
           throw new Error('Failed to fetch queue position');
         }
         const data = await res.json();
-        setPosition(data.position);
-      } catch {
-        // Fallback to simulation if API fails (network or non-OK response)
-        setPosition(prev => (prev > 1 ? prev - 1 : 1));
+        if (data.position !== undefined) {
+          setPosition(data.position);
+        }
+      } catch (error) {
+        console.error('Failed to fetch queue position:', error);
+        // Keep current position if API fails
       }
     };
     

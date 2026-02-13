@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import axios from 'axios';
 
 export async function POST(request: NextRequest) {
-  
-  if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json(
-      { message: 'Authentication service not configured for production' },
-      { status: 503 }
-    );
-  }
-
   try {
     const { email, password } = await request.json();
 
@@ -22,34 +15,56 @@ export async function POST(request: NextRequest) {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
-    const demoAccounts = [
-      { email: 'demo@medease.rw', password: 'demo123', name: '<demo_patient>' },
-      { email: 'patient@medease.rw', password: 'patient123', name: '<test_patient>' }
-    ];
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://medsystemapplication.onrender.com';
 
-    const account = demoAccounts.find(acc => acc.email === trimmedEmail && acc.password === trimmedPassword);
-    
-    if (account) {
-      return NextResponse.json({
-        message: 'Login successful (DEMO MODE)',
-        token: 'dev-token-' + Date.now(),
-        user: {
-          id: 1,
-          email: account.email,
-          name: account.name,
-          role: 'patient'
-        }
-      });
+    // Call backend API for authentication using axios
+    const backendResponse = await axios.post(
+      `${BASE_URL}/api/auth/login`,
+      {
+        email: trimmedEmail,
+        password: trimmedPassword,
+      },
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+
+    const data = backendResponse.data;
+
+    // Extract user data from response
+    const userData = data.user || data;
+    const token = data.token || data.accessToken;
+
+    // Ensure user object has required fields
+    const user = {
+      id: userData.id || userData._id || userData.userId,
+      email: userData.email || trimmedEmail,
+      name: userData.name || userData.fullName || userData.username,
+      role: userData.role || userData.userType || 'patient',
+      ...userData,
+    };
+
+    return NextResponse.json({
+      message: data.message || 'Login successful',
+      token: token,
+      user: user,
+    });
+
+  } catch (error: any) {
+    console.error('Login error:', error?.response?.data || error.message || error);
+
+    // If backend returned a response, forward its status/message
+    if (error.response) {
+      const status = error.response.status || 500;
+      const data = error.response.data || {};
+      return NextResponse.json(
+        { message: data.message || data.error || 'Login failed. Please check your credentials.' },
+        { status }
+      );
     }
 
     return NextResponse.json(
-      { message: 'Invalid credentials. Demo: demo@medease.rw / demo123' },
-      { status: 401 }
-    );
-
-  } catch (error) {
-    return NextResponse.json(
-      { message: 'Server error' },
+      { message: error.message || 'Server error occurred' },
       { status: 500 }
     );
   }

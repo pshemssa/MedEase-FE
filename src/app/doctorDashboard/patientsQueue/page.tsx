@@ -25,20 +25,48 @@ export default function PatientQueue() {
     };
   }, []);
 
-  const loadQueue = () => {
-    const savedQueue = localStorage.getItem('patientQueue');
-    if (savedQueue) {
-      try {
-        const queueData = JSON.parse(savedQueue);
-        const activeQueue = queueData.filter((p: QueuePatient) => p.status !== 'completed');
-        setQueue(activeQueue);
-        
-        const inConsultation = activeQueue.find((p: QueuePatient) => p.status === 'in-consultation');
-        setActiveConsultation(inConsultation || null);
-      } catch (error) {
-        console.warn('Failed to parse queue data:', error);
-        localStorage.removeItem('patientQueue');
-        setQueue([]);
+  const loadQueue = async () => {
+    try {
+      // Call backend API to get queue
+      const response = await fetch('/api/queue?status=waiting,in-consultation');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.data) {
+          const activeQueue = Array.isArray(data.data) ? data.data : [];
+          setQueue(activeQueue);
+          
+          const inConsultation = activeQueue.find((p: QueuePatient) => p.status === 'in-consultation');
+          setActiveConsultation(inConsultation || null);
+        }
+      } else {
+        // Fallback to localStorage if API fails
+        const savedQueue = localStorage.getItem('patientQueue');
+        if (savedQueue) {
+          try {
+            const queueData = JSON.parse(savedQueue);
+            const activeQueue = queueData.filter((p: QueuePatient) => p.status !== 'completed');
+            setQueue(activeQueue);
+            
+            const inConsultation = activeQueue.find((p: QueuePatient) => p.status === 'in-consultation');
+            setActiveConsultation(inConsultation || null);
+          } catch (error) {
+            console.warn('Failed to parse queue data:', error);
+            setQueue([]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load queue:', error);
+      // Fallback to localStorage
+      const savedQueue = localStorage.getItem('patientQueue');
+      if (savedQueue) {
+        try {
+          const queueData = JSON.parse(savedQueue);
+          const activeQueue = queueData.filter((p: QueuePatient) => p.status !== 'completed');
+          setQueue(activeQueue);
+        } catch (err) {
+          setQueue([]);
+        }
       }
     }
   };
@@ -72,32 +100,66 @@ export default function PatientQueue() {
     }
   };
 
-  const callNextPatient = () => {
+  const callNextPatient = async () => {
     const nextPatient = queue.find(p => p.status === 'waiting');
-    if (nextPatient) {
-      const updatedQueue = queue.map(p => 
-        p.id === nextPatient.id ? { ...p, status: 'in-consultation' as const } : p
-      );
-      setQueue(updatedQueue);
-      setActiveConsultation(nextPatient);
-      localStorage.setItem('patientQueue', JSON.stringify(updatedQueue));
-      broadcastUpdate();
-      showSuccess(`Called ${nextPatient.name} for consultation`);
-    } else {
+    if (!nextPatient) {
       showInfo('No patients waiting in queue');
+      return;
+    }
+
+    try {
+      // Call backend API to update status
+      const response = await fetch(`/api/queue/status/${nextPatient.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'in-consultation' }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const updatedPatient = data.data || { ...nextPatient, status: 'in-consultation' as const };
+        
+        const updatedQueue = queue.map(p => 
+          p.id === nextPatient.id ? updatedPatient : p
+        );
+        setQueue(updatedQueue);
+        setActiveConsultation(updatedPatient);
+        broadcastUpdate();
+        showSuccess(`Called ${nextPatient.name} for consultation`);
+      } else {
+        const errorData = await response.json();
+        showError(errorData.error || 'Failed to call next patient');
+      }
+    } catch (error: any) {
+      console.error('Call next patient error:', error);
+      showError('Failed to call next patient. Please try again.');
     }
   };
 
-  const completeConsultation = () => {
-    if (activeConsultation) {
-      const updatedQueue = queue.map(p => 
-        p.id === activeConsultation.id ? { ...p, status: 'completed' as const } : p
-      );
-      setQueue(updatedQueue.filter(p => p.status !== 'completed'));
-      setActiveConsultation(null);
-      localStorage.setItem('patientQueue', JSON.stringify(updatedQueue));
-      broadcastUpdate();
-      showSuccess(`Consultation with ${activeConsultation.name} completed`);
+  const completeConsultation = async () => {
+    if (!activeConsultation) return;
+
+    try {
+      // Call backend API to update status
+      const response = await fetch(`/api/queue/status/${activeConsultation.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'completed' }),
+      });
+
+      if (response.ok) {
+        const updatedQueue = queue.filter(p => p.id !== activeConsultation.id);
+        setQueue(updatedQueue);
+        setActiveConsultation(null);
+        broadcastUpdate();
+        showSuccess(`Consultation with ${activeConsultation.name} completed`);
+      } else {
+        const errorData = await response.json();
+        showError(errorData.error || 'Failed to complete consultation');
+      }
+    } catch (error: any) {
+      console.error('Complete consultation error:', error);
+      showError('Failed to complete consultation. Please try again.');
     }
   };
 

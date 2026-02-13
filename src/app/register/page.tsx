@@ -174,29 +174,71 @@ export default function Register() {
     }
 
     setIsSubmitting(true)
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+    setErrorMessage("")
+    setSuccessMessage("")
 
-      const referenceNumber = `RW-${userRole.toUpperCase()}-${Date.now().toString().slice(-6)}`
-      
-      console.log("Registration submitted:", { 
-        role: userRole, 
-        referenceNumber,
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName
+    try {
+      // Build payload for backend registration
+      const payload: any = {
+        role: userRole,
+        userRole,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim() || undefined,
+        password: formData.password.trim(),
+        phone: formData.phone?.trim() || undefined,
+        dateOfBirth: formData.dateOfBirth || undefined,
+        gender: formData.gender || undefined,
+        insuranceProvider: formData.insuranceProvider || undefined,
+        insuranceNumber: formData.insuranceNumber?.trim() || undefined,
+        licenseNumber: formData.licenseNumber?.trim() || undefined,
+        pharmacyName: formData.pharmacyName?.trim() || undefined,
+      }
+
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       })
-      
-    
-    
-      setErrorMessage("")
-      
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        setErrorMessage(result.message || "Registration failed. Please try again or contact support if the problem persists.")
+        return
+      }
+
+      const backend = result.data || {}
+      const otp = backend.otp as string | undefined
+      const referenceNumber = (backend.referenceNumber as string | undefined) || ""
+      const backendMessage = (backend.Message as string | undefined) || (result.message as string | undefined)
+
+      // Persist data needed for OTP verification flow
+      if (formData.email) {
+        localStorage.setItem("registrationEmail", formData.email.trim())
+      }
+      if (referenceNumber) {
+        localStorage.setItem("registrationReferenceNumber", referenceNumber)
+      }
+      if (otp) {
+        // For development/demo purposes; real app would email/SMS this
+        localStorage.setItem("registrationOTP", otp)
+        console.log("Registration OTP (dev only):", otp)
+      }
+      localStorage.setItem("registrationRole", userRole)
+
+      setSuccessMessage(
+        backendMessage ||
+          "Registration successful. Please check your email for the verification code."
+      )
       setShowSuccessCard(true)
-      
+
+      // After a short delay, navigate to OTP verification screen
       setTimeout(() => {
-        router.push('/login')
-      }, 3000)
+        router.push("/verify-otp?context=register")
+      }, 1500)
     } catch (error) {
+      console.error("Registration error:", error)
       setErrorMessage("Registration failed. Please try again or contact support if the problem persists.")
     } finally {
       setIsSubmitting(false)

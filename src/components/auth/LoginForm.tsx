@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Lock, Mail, Shield, AlertCircle } from "lucide-react"
+import { setAuth, getRoleBasedRedirect } from "@/lib/auth-middleware"
 
 export default function LoginForm() {
   const router = useRouter()
@@ -36,14 +37,22 @@ export default function LoginForm() {
       const data = await response.json()
 
       if (!response.ok) {
-        setErrors({ general: data.message || "Login failed. Please try again." })
+        setErrors({ general: data.message || data.error || "Login failed. Please check your credentials and try again." })
         return
       }
 
-      localStorage.setItem("authToken", data.token)
-      router.push("/dashboard")
+      // Store authentication data
+      if (data.token && data.user) {
+        setAuth(data.token, data.user)
+        
+        // Redirect based on user role
+        const redirectPath = getRoleBasedRedirect(data.user.role)
+        router.push(redirectPath)
+      } else {
+        setErrors({ general: "Invalid response from server. Please try again." })
+      }
     } catch (error) {
-      setErrors({ general: "Network error. Please try again." })
+      setErrors({ general: "Network error. Please check your connection and try again." })
     } finally {
       setIsLoading(false)
     }

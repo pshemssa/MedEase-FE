@@ -16,51 +16,95 @@ export default function QueuePage() {
 
   useEffect(() => {
     if (!inQueue) return;
-    const interval = setInterval(() => {
-      setQueuePosition(prev => prev && prev > 1 ? prev - 1 : prev);
-    }, 5000);
+    
+    // Fetch position from backend
+    const fetchPosition = async () => {
+      try {
+        const queueData = localStorage.getItem('queueData');
+        if (queueData) {
+          const parsed = JSON.parse(queueData);
+          const queueId = parsed.queueId;
+          
+          const response = await fetch(`/api/queue/position${queueId ? `?queueId=${queueId}` : ''}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.position !== undefined) {
+              setQueuePosition(data.position);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch queue position:', error);
+      }
+    };
+
+    fetchPosition(); // Initial fetch
+    const interval = setInterval(fetchPosition, 5000);
     return () => clearInterval(interval);
   }, [inQueue]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!clinic || !department) return;
     
-    // Generate queue data
-    const queueId = `Q-${Date.now()}`;
-    const currentTime = new Date().toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
-    
-    // Get existing queue
-    const existingQueue = JSON.parse(localStorage.getItem('patientQueue') || '[]');
-    const queueNumber = existingQueue.length + 1;
-    
-    // Create queue patient object
-    const queuePatient = {
-      id: queueId,
-      name: 'Patient ' + queueNumber, // You can modify this to get actual patient name
-      appointmentTime: currentTime,
-      reason: department,
-      status: 'waiting' as const,
-      queueNumber: queueNumber
-    };
-    
-    // Add to queue
-    existingQueue.push(queuePatient);
-    localStorage.setItem('patientQueue', JSON.stringify(existingQueue));
-    
-    // Set local state
-    const position = queueNumber;
-    setQueuePosition(position);
-    setInQueue(true);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Call backend API to join queue
+      const response = await fetch('/api/queue/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clinic,
+          department,
+          doctor: doctor || undefined,
+          reason: department,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to join queue');
+      }
+
+      // Store queue data locally for reference
+      const queueData = {
+        clinic,
+        department,
+        doctor,
+        position: data.data?.position || data.data?.queueNumber || 1,
+        queueId: data.data?.id || data.data?.queueId,
+        joinedAt: new Date().toISOString(),
+      };
+      
+      localStorage.setItem('queueData', JSON.stringify(queueData));
+      
+      // Set local state
+      setQueuePosition(queueData.position);
+      setInQueue(true);
+    } catch (err: any) {
+      setError(err.message || 'Failed to join queue. Please try again.');
+      console.error('Join queue error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-md mx-auto mt-12 bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-2xl font-bold text-center mb-8">Join Queue</h1>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            {error}
+          </div>
+        )}
 
         {!inQueue ? (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -119,9 +163,17 @@ export default function QueuePage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-md"
+            disabled={isLoading}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Join Queue
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Joining Queue...
+              </>
+            ) : (
+              'Join Queue'
+            )}
           </button>
         </form>
         ) : (

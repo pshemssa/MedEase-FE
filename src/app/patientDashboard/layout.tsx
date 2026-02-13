@@ -1,12 +1,12 @@
 import ProtectedRoute from "@/components/auth/ProtectedRoute"
 
-export default function DoctorDashboardLayout({
+export default function PatientDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <ProtectedRoute allowedRoles="doctor">
+    <ProtectedRoute allowedRoles="patient">
       {children}
     </ProtectedRoute>
   )

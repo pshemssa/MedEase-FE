@@ -3,23 +3,25 @@ import { queueService } from '@/lib/queue-service';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get queueId from query params if provided
     const searchParams = request.nextUrl.searchParams;
-    const queueId = searchParams.get('queueId') || undefined;
+    const doctorId = searchParams.get('doctorId') || undefined;
+    const status = searchParams.get('status') || undefined;
 
-    // Call backend API to get queue position
-    const result = await queueService.getPosition(queueId);
+    // Call backend API to get queue
+    const result = await queueService.getQueue(doctorId, status);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error || 'Failed to get queue position' },
+        { error: result.error || 'Failed to get queue' },
         { status: 400 }
       );
     }
 
-    return NextResponse.json(result.data);
+    return NextResponse.json({
+      data: result.data || [],
+    });
   } catch (error: any) {
-    console.error('Queue position error:', error);
+    console.error('Get queue error:', error);
     return NextResponse.json(
       { error: error.message || 'Server error occurred' },
       { status: 500 }
