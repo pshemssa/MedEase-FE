@@ -13,7 +13,15 @@ export async function POST(request: NextRequest) {
 
     // Expect a role from the frontend, default to patient
     const role = (body.role || body.userRole || 'patient') as string;
-    const { role: _role, userRole: _userRole, ...payload } = body;
+    const { role: _role, userRole: _userRole, firstName, lastName, ...rest } = body;
+
+    // Combine firstName and lastName into username for backend
+    const payload = {
+      ...rest,
+      username: `${firstName} ${lastName}`.trim(),
+      firstName,
+      lastName,
+    };
 
     const BASE_URL =
       process.env.NEXT_PUBLIC_API_URL || 'https://medsystemapplication.onrender.com';
